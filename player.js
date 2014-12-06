@@ -20,6 +20,13 @@ Player.prototype = {
 
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
+      this.wasd = {
+        up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
+        down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
+        left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
+        right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
+        fire: this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+      };
     },
 
     create: function() {
@@ -39,12 +46,15 @@ Player.prototype = {
       this.baseball.body.bounce.y = 0.2;
       this.baseball.body.bounce.x = 0.5;
       this.baseball.body.gravity.y = 800;
+      this.baseball.body.drag.x = 100;
+      this.baseball.body.drag.y = 100;
+      this.baseball.anchor.setTo(0.5, 0.5);
 
       this.player.body.collideWorldBounds = true;
       this.player.body.bounce.y = 0.0;
       this.player.body.gravity.y = 800;
 
-      this.player.animations.add('walk', [1, 2, 3, 4, 5, 6], 10, true);
+      this.player.animations.add('walk', [1, 2, 3, 4, 5, 6, 4, 3, 2], 10, true);
 
       //Throw stuff
        //  Our bullet group
@@ -63,22 +73,34 @@ Player.prototype = {
     },
 
     update: function(level) {
-      //console.log(level);
+       // console.log(this.baseball.body);
 
       // this.game.physics.arcade.overlap(this.player, level.watergun, function(){  },null,this);
-      //this.game.physics.arcade.collide(this.player, level.layer[2]);
+      // this.game.physics.arcade.collide(this.player, level.layer[2]);
+      // this.game.physics.arcade.collide(level.bug, level.layer[2]);
+      // this.game.physics.arcade.collide(this.baseball, level.layer[2]);
+      this.game.physics.arcade.collide(this.player, level.platforms);
+      this.game.physics.arcade.collide(level.bug, level.platforms);
+      this.game.physics.arcade.collide(this.baseball, level.platforms);
+
       this.game.physics.arcade.collide(this.player, this.baseball, function(){
         this.collectToy(this.player, level, this.baseball);
       }, null, this);
-      // this.game.physics.arcade.collide(this.baseball, level.bug);
-      //this.game.physics.arcade.collide(this.baseball, level.layer[2]);
-      //this.game.physics.arcade.collide(level.bug, level.layer[2]);
+      this.game.physics.arcade.collide(this.baseball, level.bug);
+
+
 
       ///console.log(this.game.physics.arcade.distanceBetween(this.baseball, level.bug));
 
+      if (level.bug.body.touching.up ) {
+        level.bug.flying = false;
+        level.bug.body.velocity.y = 0;
+        level.bug.body.velocity.x = 1;
+        level.bug.animations.play('stop');
+      }
+
       if (this.game.physics.arcade.distanceBetween(this.baseball, level.bug) < 90 && !level.bug.flying) {
         console.log('FLY!');
-
         level.bug.animations.play('fly');
         level.bug.flying = true;
         level.bug.body.gravity.y = -600;
@@ -86,8 +108,18 @@ Player.prototype = {
         this.game.physics.arcade.moveToXY(level.bug, 500, this.player.x + 400, this.player.y + 100, 750);
       };
 
+      if (this.baseball.body.velocity.x > 2) {
+        this.baseball.rotation += 0.1;
+      } else if (this.baseball.body.velocity.x < -2){
+        this.baseball.rotation += -0.1;
+      } else {
+        this.baseball.rotation = 0;
+      }
+
+
+
        //console.log('player',this.player, this.player, 'bug', level.bug, level.bug);
-      if (this.cursors.left.isDown) {
+      if (this.wasd.left.isDown) {
        // console.log('LEFT!');
         this.player.body.velocity.x = -150;
         this.player.animations.play('walk');
@@ -95,7 +127,7 @@ Player.prototype = {
         this.player.scale.x = 1;
         this.player.scale.x = -1;
 
-      } else if (this.cursors.right.isDown) {
+      } else if (this.wasd.right.isDown) {
         this.player.body.velocity.x = 150;
         this.player.animations.play('walk');
         this.player.scale.x = 1;
@@ -106,8 +138,15 @@ Player.prototype = {
         this.player.frame = 0;
 
       }
+      if (this.wasd.up.isDown && this.player.body.touching.down) {
+       // console.log('LEFT!');
+        this.player.body.velocity.y = -350;
+        this.player.animations.play('walk');
+        this.player.frame = 0;
 
-      if (this.cursors.up.isDown) {
+      }
+
+      if (this.wasd.fire.isDown) {
         console.log('Haz ball?', this.player.hasBaseball);
         this.fire(this.player, this.baseball);
       }

@@ -3,6 +3,7 @@ var Level = function(game){
   this.game = game;
   this.layer = [];
   this.bugTimer = null;
+  this.platforms;
 };
 
 
@@ -13,6 +14,9 @@ Level.prototype = {
 
       this.game.stage.backgroundColor = '#DDDDDD';
       this.game.load.image('tiles', 'assets/room_tiles.png');
+      this.game.load.image('floor', 'assets/carpet_tile.png');
+      this.game.load.image('ceiling', 'assets/ceiling_tile.png');
+
       //this.game.load.image('bug', 'assets/little_bug.png');
       this.game.load.spritesheet('bug_ani', 'assets/little_bug_ani.png', 24, 24);
 
@@ -31,15 +35,27 @@ Level.prototype = {
       // this.layer[2] = this.map.createLayer('Walls');
       // this.layer[2].debug = true;
       // this.game.physics.arcade.enable(this.layer[2], Phaser.Physics.ARCADE, true);
-      this.layer[0].resizeWorld();
-      // this.map.setCollisionBetween(0,100,true,this.layer[2]);
+      // this.layer[0].resizeWorld();
+      // this.map.setCollisionBetween(0,1,true,this.layer[2]);
+
+      this.platforms = game.add.group();
+      this.platforms.enableBody = true;
+      var floor = this.platforms.create(0, this.game.world.height - 32, 'floor');
+      var ceiling = this.platforms.create(0, 0, 'ceiling');
+
+      ceiling.scale.setTo(100, 2);
+      ceiling.body.immovable = true;
+      floor.scale.setTo(100, 2);
+      floor.body.immovable = true;
 
       this.bug = this.game.add.sprite(90, 400, 'bug_ani');
       this.bug.flying = false;
       this.bug.animations.add('walk', [0, 1], 10, true);
       this.bug.animations.add('fly', [3, 4], 10, true);
+      this.bug.animations.add('stop', [0], 10, true);
 
       this.bug.animations.play('walk');
+      this.bug.debug = true;
 
       this.game.physics.arcade.enable(this.bug);
       this.bug.anchor.setTo(0.5, 0.5);
