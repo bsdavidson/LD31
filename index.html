@@ -21,6 +21,8 @@ var game = new Phaser.Game(800, 500, Phaser.AUTO, '', { preload: preload, create
 
 var player = null;
 var level = null;
+var bug = null;
+
 
 function preload()
 {
@@ -29,18 +31,14 @@ function preload()
     level.preload();
 
     player = new Player(game, 30, 120);
-
     player.preload();
-
-
-    // hud = new HUD(game);
 }
 
 function create()
 {
     level.create();
     player.create();
-    // hud.create();
+
 }
 
 function update()
