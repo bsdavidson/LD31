@@ -4,8 +4,18 @@
 	<meta charset="UTF-8" />
 	<title>LD31</title>
 	<script type="text/javascript" src="js/phaser.min.js"></script>
+    <script type="text/javascript" src="boot.js"></script>
+    <script type="text/javascript" src="preloader.js"></script>
+    <script type="text/javascript" src="menu.js"></script>
+    <script type="text/javascript" src="gameover.js"></script>
+    <script type="text/javascript" src="gamewon.js"></script>
+    <script type="text/javascript" src="game.js"></script>
+
+    <script type="text/javascript" src="bug.js"></script>
     <script type="text/javascript" src="level.js"></script>
     <script type="text/javascript" src="player.js"></script>
+
+
     <style type="text/css">
         body {
             margin: 0;
@@ -16,37 +26,20 @@
 
 
 <script type="text/javascript">
-"use strict";
+(function() {
 
-var game = new Phaser.Game(800, 480, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    var game = new Phaser.Game(800, 480, Phaser.AUTO, 'game');
 
-game.gravity
+    game.state.add('Boot', LD.Boot);
+    game.state.add('Preloader', LD.Preloader);
+    game.state.add('Menu', LD.Menu);
+    game.state.add('Game', LD.Game);
+    game.state.add('Gameover', LD.Gameover);
+    game.state.add('GameWon', LD.GameWon);
 
-var player = null;
-var level = null;
-var object = null;
-
-
-function preload() {
-
-    level = new Level(game);
-    level.preload();
-
-    player = new Player(game, 30, 120);
-    player.preload();
-
-};
-
-function create() {
-    level.create();
-    player.create();
-};
-
-function update() {
-    level.update(player);
-    player.update(level);
-
-};
+    // start the Boot state
+    game.state.start('Boot');
+})();
 
 </script>
 </body>
