@@ -13,26 +13,27 @@ var nextFire = 0;
 Player.prototype = {
     preload: function() {
       // this.game.load.image('brian', 'assets/little_brian.png');
-      this.game.load.spritesheet('brian_ani', 'assets/little_brian_ani.png', 33, 60);
+      this.game.load.spritesheet('brian_ani', 'assets/little_brian_ani.png', 55, 100);
       //this.game.load.image('arm', 'assets/brian_arm.png');
       this.game.load.image('baseball', 'assets/baseball.png');
       this.game.load.image('watergun', 'assets/water_gun.png');
 
 
       this.cursors = this.game.input.keyboard.createCursorKeys();
-      this.wasd = {
+      this.controls = {
         up: this.game.input.keyboard.addKey(Phaser.Keyboard.W),
         down: this.game.input.keyboard.addKey(Phaser.Keyboard.S),
         left: this.game.input.keyboard.addKey(Phaser.Keyboard.A),
         right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
         fire: this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+        pickup: this.game.input.keyboard.addKey(Phaser.Keyboard.E)
       };
     },
 
     create: function() {
       // Create our child
-      this.player = this.game.add.sprite(90, 400, 'brian_ani');
-      this.baseball = this.game.add.sprite(290, 400, 'baseball');
+      this.player = this.game.add.sprite(90, this.game.world.height - 32, 'brian_ani');
+      this.baseball = this.game.add.sprite(290, this.game.world.height - 36, 'baseball');
 
       this.player.hasBaseball = false;
       this.player.hasWatergun = false;
@@ -45,50 +46,40 @@ Player.prototype = {
       this.baseball.body.collideWorldBounds = true;
       this.baseball.body.bounce.y = 0.2;
       this.baseball.body.bounce.x = 0.5;
-      this.baseball.body.gravity.y = 800;
+      this.baseball.body.gravity.y = 700;
       this.baseball.body.drag.x = 100;
       this.baseball.body.drag.y = 100;
       this.baseball.anchor.setTo(0.5, 0.5);
+      //this.baseball.scale.x = 0.75;
+      //this.baseball.scale.y = 0.75;
+
 
       this.player.body.collideWorldBounds = true;
       this.player.body.bounce.y = 0.0;
       this.player.body.gravity.y = 800;
 
-      this.player.animations.add('walk', [1, 2, 3, 4, 5, 6, 4, 3, 2], 10, true);
+      this.player.animations.add('walk', [0, 1, 2, 3, 4, 5], 10, true);
 
-      //Throw stuff
-       //  Our bullet group
-      //this.toys = this.game.add.group();
-      // this.toys.enableBody = true;
-      // this.toys.physicsBodyType = Phaser.Physics.ARCADE;
-      // this.toys.createMultiple(10, 'baseball', 0, false);
-      // this.toys.setAll('anchor.x', 0.5);
-      // this.toys.setAll('anchor.y', 0.5);
-      // this.toys.setAll('checkWorldBounds', true);
-      // this.toys.setAll('body.allowGravity', true);
-      // this.toys.setAll('body.collideWorldBounds', true);
-      // this.toys.setAll('body.bounce.y', .5);
-      // this.toys.setAll('body.gravity.y', 700);
 
     },
 
     update: function(level) {
-       // console.log(this.baseball.body);
 
-      // this.game.physics.arcade.overlap(this.player, level.watergun, function(){  },null,this);
-      // this.game.physics.arcade.collide(this.player, level.layer[2]);
-      // this.game.physics.arcade.collide(level.bug, level.layer[2]);
-      // this.game.physics.arcade.collide(this.baseball, level.layer[2]);
       this.game.physics.arcade.collide(this.player, level.platforms);
       this.game.physics.arcade.collide(level.bug, level.platforms);
       this.game.physics.arcade.collide(this.baseball, level.platforms);
 
-      this.game.physics.arcade.collide(this.player, this.baseball, function(){
-        this.collectToy(this.player, level, this.baseball);
-      }, null, this);
+      this.game.physics.arcade.overlap(this.player, this.baseball, function(){
+          if (this.controls.pickup.isDown) {
+            this.collectToy(this.player, level, this.baseball);
+          }
+        }, null, this);
+
+       this.game.physics.arcade.overlap(this.baseball, level.fan_top, function(){
+          this.game.physics.arcade.moveToXY(this.baseball, 500, this.player.x + 400, this.player.y + 100, 750);
+        }, null, this);
+
       this.game.physics.arcade.collide(this.baseball, level.bug);
-
-
 
       ///console.log(this.game.physics.arcade.distanceBetween(this.baseball, level.bug));
 
@@ -98,6 +89,7 @@ Player.prototype = {
         level.bug.body.velocity.x = 1;
         level.bug.animations.play('stop');
       }
+
 
       if (this.game.physics.arcade.distanceBetween(this.baseball, level.bug) < 90 && !level.bug.flying) {
         console.log('FLY!');
@@ -117,9 +109,8 @@ Player.prototype = {
       }
 
 
-
        //console.log('player',this.player, this.player, 'bug', level.bug, level.bug);
-      if (this.wasd.left.isDown) {
+      if (this.controls.left.isDown) {
        // console.log('LEFT!');
         this.player.body.velocity.x = -150;
         this.player.animations.play('walk');
@@ -127,7 +118,7 @@ Player.prototype = {
         this.player.scale.x = 1;
         this.player.scale.x = -1;
 
-      } else if (this.wasd.right.isDown) {
+      } else if (this.controls.right.isDown) {
         this.player.body.velocity.x = 150;
         this.player.animations.play('walk');
         this.player.scale.x = 1;
@@ -138,7 +129,7 @@ Player.prototype = {
         this.player.frame = 0;
 
       }
-      if (this.wasd.up.isDown && this.player.body.touching.down) {
+      if (this.controls.up.isDown && this.player.body.touching.down) {
        // console.log('LEFT!');
         this.player.body.velocity.y = -350;
         this.player.animations.play('walk');
@@ -146,7 +137,7 @@ Player.prototype = {
 
       }
 
-      if (this.wasd.fire.isDown) {
+      if (this.controls.fire.isDown) {
         console.log('Haz ball?', this.player.hasBaseball);
         this.fire(this.player, this.baseball);
       }

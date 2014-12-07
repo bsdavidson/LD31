@@ -16,8 +16,8 @@ Level.prototype = {
       this.game.load.image('tiles', 'assets/room_tiles.png');
       this.game.load.image('floor', 'assets/carpet_tile.png');
       this.game.load.image('ceiling', 'assets/ceiling_tile.png');
-
-      //this.game.load.image('bug', 'assets/little_bug.png');
+      this.game.load.spritesheet('fan_top', 'assets/fan_top.png', 192, 102);
+      this.game.load.image('fan_light', 'assets/fan_light.png');
       this.game.load.spritesheet('bug_ani', 'assets/little_bug_ani.png', 24, 24);
 
       this.game.load.tilemap('room', 'assets/room_tiled.json', null, Phaser.Tilemap.TILED_JSON);
@@ -32,10 +32,12 @@ Level.prototype = {
 
       this.layer[0] = this.map.createLayer('Background');
       this.layer[1] = this.map.createLayer('Backwall');
+      this.layer[2] = this.map.createLayer('Walls');
+
       // this.layer[2] = this.map.createLayer('Walls');
       // this.layer[2].debug = true;
-      // this.game.physics.arcade.enable(this.layer[2], Phaser.Physics.ARCADE, true);
-      // this.layer[0].resizeWorld();
+       //this.game.physics.arcade.enable(this.layer[2], Phaser.Physics.ARCADE, true);
+       this.layer[0].resizeWorld();
       // this.map.setCollisionBetween(0,1,true,this.layer[2]);
 
       this.platforms = game.add.group();
@@ -48,19 +50,25 @@ Level.prototype = {
       floor.scale.setTo(100, 2);
       floor.body.immovable = true;
 
+      this.fan_top = this.game.add.sprite(300, 0, 'fan_top');
+      this.game.physics.arcade.enable(this.fan_top);
+      this.fan_top.animations.add('spin', [0, 1, 2], 10, true);
+      this.fan_top.animations.play('spin');
+      this.fan_top.body.immovable = true;
+
+      this.fan_light = this.game.add.sprite(330, 104, 'fan_light');
+      this.game.physics.arcade.enable(this.fan_light);
+      this.fan_top.body.immovable = true;
+
       this.bug = this.game.add.sprite(90, 400, 'bug_ani');
       this.bug.flying = false;
       this.bug.animations.add('walk', [0, 1], 10, true);
       this.bug.animations.add('fly', [3, 4], 10, true);
       this.bug.animations.add('stop', [0], 10, true);
-
       this.bug.animations.play('walk');
       this.bug.debug = true;
-
       this.game.physics.arcade.enable(this.bug);
       this.bug.anchor.setTo(0.5, 0.5);
-
-
       this.bug.body.collideWorldBounds = true;
       this.bug.body.bounce.y = 0;
       this.bug.body.bounce.x = 0.4;
