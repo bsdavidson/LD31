@@ -1,23 +1,27 @@
 "use strict";
-LD.Gamewon = function(game){};
+LD.GameWon = function(game){
+  this.game = game;
+};
 
-LD.Gamewon.prototype = {
+LD.GameWon.prototype = {
 
     create: function () {
-      console.log("create mainmenu");
-      console.log(this.controls);
+      var displayText = this.game.deathType;
+
+      this.add.sprite(0, 0, 'gamewonscreen');
+
       // display images
 
     // add the button that will start the game
 
-    this.add.sprite(0, 0, 'titlescreen');
+    this.game.input.onDown.add(this.startGame, this);
 
-    this.add.button(LD.GAME_WIDTH-401-10, LD.GAME_HEIGHT-143-10, 'button-start', this.startGame, this, 1, 0, 2);
+
 
     },
 
     startGame: function() {
-      this.state.start('Game');
+      this.state.start('Menu');
     }
 
 };

@@ -12,12 +12,11 @@ LD.Gameover.prototype = {
 
     this.add.sprite(0, 0, 'gameoverscreen');
 
-    this.add.button(LD.GAME_WIDTH-401-10, LD.GAME_HEIGHT-143-10, 'button-start', this.startGame, this, 1, 0, 2);
-
+    this.game.input.onDown.add(this.startGame, this);
     },
 
     startGame: function() {
-      this.state.start('Game');
+      this.state.start('Menu');
     }
 
 };
