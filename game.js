@@ -1,13 +1,11 @@
 "use strict";
 LD.Game = function(game){
-  this.deathType = null;
 };
 
 
 LD.Game.prototype = {
 
     create: function () {
-      // console.log(this);
       this.level = new LD.Level(this);
       this.bug = new LD.Bug(this);
       this.player = new LD.Player(this, 30, 120);

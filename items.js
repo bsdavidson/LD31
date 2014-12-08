@@ -17,7 +17,7 @@ LD.Items.prototype = {
       this.baseball.body.collideWorldBounds = true;
       this.baseball.body.bounce.y = 0.2;
       this.baseball.body.bounce.x = 0.5;
-      this.baseball.body.gravity.y = 700;
+      this.baseball.body.gravity.y = 800;
       this.baseball.body.drag.x = 100;
       this.baseball.body.drag.y = 100;
       this.baseball.anchor.setTo(0.5, 0.5);

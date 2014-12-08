@@ -95,7 +95,7 @@ LD.Player.prototype = {
 
         // What happens when we get close enough to scare him
         if (this.game.physics.arcade.distanceBetween(this.baseball, this.bug) < 90 && !this.bug.flying) {
-            // this.game.bug.fly_sound.play();
+            this.game.bug.fly_sound.play();
             this.bug.angry = true;
             this.bug.angerTimer = this.game.time.now;
             this.bug.animations.play('fly');
@@ -113,7 +113,6 @@ LD.Player.prototype = {
             this.baseball.rotation = 0;
         }
 
-        // console.log('player',this.player, 'bug', this.bug);
         if (!this.player.controlDisabled) {
             if (this.game.controls.left.isDown) {
                 // console.log('LEFT!');
@@ -205,7 +204,6 @@ LD.Player.prototype.gameWin = function () {
 
 LD.Player.prototype.fire = function (item) {
     if (this.player.hasBaseball) {
-        console.log('throw ball');
         this.player.hasBaseball = false;
         item.reset(this.player.x, this.player.y - 80);
         this.player.animations.play('throw');

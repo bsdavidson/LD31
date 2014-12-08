@@ -6,9 +6,6 @@ LD.Gameover.prototype = {
     create: function () {
       console.log("create mainmenu");
       console.log(this.controls);
-      // display images
-
-    // add the button that will start the game
 
     this.add.sprite(0, 0, 'gameoverscreen');
 

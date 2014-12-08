@@ -29,7 +29,7 @@ LD.Preloader.prototype = {
       this.load.tilemap('room', 'assets/room_tiled.json', null, Phaser.Tilemap.TILED_JSON);
 
       // Sounds
-      this.load.audio('fly_sound', 'assets/fly.wav');
+      this.load.audio('fly_sound', 'assets/fly.ogg');
       this.load.audio('ball_hit', 'assets/ball_hit.wav');
       this.load.audio('scream', 'assets/scream.ogg');
       this.load.audio('cat_meow', 'assets/cat_meow.ogg');
