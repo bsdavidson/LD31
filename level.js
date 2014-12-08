@@ -44,6 +44,8 @@ LD.Level.prototype = {
         this.fan_top.body.immovable = true;
 
         this.tv = this.game.add.sprite(330, this.game.world.height - 200, 'tv');
+        this.console = this.game.add.sprite(333, this.game.world.height - 110, 'console');
+
         // this.game.physics.arcade.enable(this.fan_light);
         this.fan_top.body.immovable = true;
 

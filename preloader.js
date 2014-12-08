@@ -18,6 +18,7 @@ LD.Preloader.prototype = {
       this.load.image('baseball', 'assets/baseball.png');
       this.load.image('watergun', 'assets/water_gun.png');
       this.load.image('tv', 'assets/tv.png');
+      this.load.image('console', 'assets/console.png');
 
       // Sprite Sheets
       this.load.spritesheet('fan_top', 'assets/fan_top.png', 192, 102);
