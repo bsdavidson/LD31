@@ -207,17 +207,18 @@ LD.Player.prototype.fire = function (item) {
     if (this.player.hasBaseball) {
         console.log('throw ball');
         this.player.hasBaseball = false;
-        item.reset(this.player.x + 10, this.player.y - 80);
+        item.reset(this.player.x, this.player.y - 80);
         this.player.animations.play('throw');
         item.rotation = this.game.physics.arcade.moveToPointer(item, 1000, this.game.input.activePointer, 500);
 
     } else if (this.player.hasCat) {
         this.player.hasCat = false;
-        item.reset(this.player.x + 10, this.player.y - 80);
+        this.actor.cat.walkTimer = null;
+        item.reset(this.player.x, this.player.y - 80);
         this.player.animations.play('throw');
         this.actor.cat.attack.play();
-        item.rotation = this.game.physics.arcade.moveToPointer(item, 600, this.game.input.activePointer, 500);
-        this.actor.cat.animations.play('pounce');
+        this.game.physics.arcade.moveToPointer(item, 600, this.game.input.activePointer, 500);
+
     }  else {
 
     }

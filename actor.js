@@ -21,7 +21,7 @@ LD.Actor.prototype = {
       this.cat.body.collideWorldBounds = true;
       this.cat.body.bounce.y = 0.0;
       this.cat.body.bounce.x = 0.0;
-      this.cat.body.gravity.y = 800;
+      this.cat.body.gravity.y = 1200;
       this.cat.body.drag.x = 100;
       this.cat.body.drag.y = 100;
       this.cat.anchor.setTo(0.5, 1);
@@ -31,7 +31,7 @@ LD.Actor.prototype = {
       this.cat.animations.add('swish', [0, 1, 2, 3, 2, 1, 0, 0], 10, true);
       this.cat.animations.add('walk', [5, 6, 7, 8, 9], 7, true);
       this.cat.animations.add('pounce', [10], 10, true);
-      this.cat.animations.add('eat', [11, 12], 10, true);
+      this.cat.animations.add('eat', [11, 12, 11, 12,11, 12,11, 12,11, 12 ], 9, false);
 
       this.cat.animations.play('sit');
       this.game.physics.arcade.enable(this.cat);
@@ -42,6 +42,7 @@ LD.Actor.prototype = {
       this.pointers();
       this.game.physics.arcade.collide(this.cat, this.platforms);
       this.game.physics.arcade.overlap(this.cat, this.player, function () {
+        if (this.cat.body.touching.down && !this.player.hasCat){
           if(this.cat.walkTimer){
             this.cat.walkTimer = this.game.time.now;
             this.walk();
@@ -50,20 +51,37 @@ LD.Actor.prototype = {
             this.cat.walkTimer = this.game.time.now;
             this.walk();
           }
+        }
 
       }, null, this);
 
-    if (this.game.physics.arcade.distanceBetween(this.cat, this.bug) < 200) {
+    if (this.game.physics.arcade.distanceBetween(this.cat, this.bug) < 200 &&
+      !this.player.controlDisabled && this.cat.body.touching.down) {
           this.pounce();
+          this.cat.walkTimer = null;
       };
 
-     if(this.cat.walkTimer && this.cat.body.touching.down){
+    this.game.physics.arcade.overlap(this.bug, this.cat, function () {
+            if (this.bug.health < 90) {
+                this.cat.walkTimer = null;
+                this.bug.kill();
+
+                this.cat.body.velocity.x = 0;
+                this.cat.body.velocity.y = 0;
+
+                this.game.state.start('GameWonCat');
+
+            }
+        }, null, this);
+
+      if(this.cat.walkTimer && this.cat.body.touching.down){
             this.walk();
       }
 
       if(this.cat.body.touching.down) {
         this.cat.rotation = 0;
       } else {
+        this.cat.walkTimer = null;
         this.actor.cat.animations.play('pounce');
       }
 
@@ -84,7 +102,7 @@ LD.Actor.prototype.pounce = function(){
   if (this.cat.pounceTimer) {
           var elapsedTime = this.game.time.now - this.cat.pounceTimer;
 
-            if (elapsedTime > 4000) {
+          if (elapsedTime > 4000) {
               this.cat.pounceTimer = null;
             }
           } else {
@@ -97,6 +115,7 @@ LD.Actor.prototype.pounce = function(){
 
 LD.Actor.prototype.walk = function(){
   var vel = this.cat.body.velocity.x;
+  console.log('Walk time');
   if (this.cat.walkTimer) {
       var elapsedTime = this.game.time.now - this.cat.walkTimer;
 

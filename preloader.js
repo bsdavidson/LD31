@@ -10,6 +10,7 @@ LD.Preloader.prototype = {
       this.load.image('titlescreen', 'assets/title_screen.png');
       this.load.image('gameoverscreen', 'assets/game_over.png');
       this.load.image('gamewonscreen', 'assets/game_won.png');
+      this.load.image('gamewonscreencat', 'assets/game_won_cat.png');
       this.load.image('tiles', 'assets/room_tiles.png');
       this.load.image('floor', 'assets/carpet_tile.png');
       this.load.image('ceiling', 'assets/ceiling_tile.png');
