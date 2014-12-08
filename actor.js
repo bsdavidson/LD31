@@ -62,7 +62,7 @@ LD.Actor.prototype = {
     };
 
     this.game.physics.arcade.overlap(this.bug, this.cat, function () {
-      if (this.bug.health < 90) {
+      if (this.bug.health < 30) {
         this.cat.walkTimer = null;
         this.bug.kill();
 
