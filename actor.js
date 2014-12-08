@@ -74,7 +74,6 @@ LD.Actor.prototype = {
       }
     }, null, this);
 
-    console.log(this.game.physics.arcade.distanceBetween(this.cat, this.player));
     if ((this.cat.walkTimer && this.cat.body.touching.down) || this.game.physics.arcade.distanceBetween(this.cat, this.player) > 80 ) {
       this.walk();
     }

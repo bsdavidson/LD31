@@ -4,8 +4,6 @@ LD.Gameover = function(game){};
 LD.Gameover.prototype = {
 
     create: function () {
-      console.log("create mainmenu");
-      console.log(this.controls);
 
     this.add.sprite(0, 0, 'gameoverscreen');
 
