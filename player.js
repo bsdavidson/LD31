@@ -198,9 +198,6 @@ LD.Player.prototype.collectCat = function (cat) {
 };
 
 
-LD.Player.prototype.gameWin = function () {
-
-};
 
 LD.Player.prototype.fire = function (item) {
     if (this.player.hasBaseball) {
@@ -215,7 +212,7 @@ LD.Player.prototype.fire = function (item) {
         item.reset(this.player.x, this.player.y - 80);
         this.player.animations.play('throw');
         this.actor.cat.attack.play();
-        this.game.physics.arcade.moveToPointer(item, 600, this.game.input.activePointer, 500);
+        item.rotation = this.game.physics.arcade.moveToPointer(item, 600, this.game.input.activePointer, 500);
 
     }  else {
 

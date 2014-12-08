@@ -74,7 +74,8 @@ LD.Actor.prototype = {
       }
     }, null, this);
 
-    if (this.cat.walkTimer && this.cat.body.touching.down) {
+    console.log(this.game.physics.arcade.distanceBetween(this.cat, this.player));
+    if ((this.cat.walkTimer && this.cat.body.touching.down) || this.game.physics.arcade.distanceBetween(this.cat, this.player) > 80 ) {
       this.walk();
     }
 
@@ -115,8 +116,8 @@ LD.Actor.prototype.pounce = function () {
 
 LD.Actor.prototype.walk = function () {
   var vel = this.cat.body.velocity.x;
-  console.log('Walk time');
-  if (this.cat.walkTimer) {
+
+  if (this.cat.walkTimer || this.game.physics.arcade.distanceBetween(this.cat, this.player) && this.cat.body.touching.down) {
     var elapsedTime = this.game.time.now - this.cat.walkTimer;
 
 
