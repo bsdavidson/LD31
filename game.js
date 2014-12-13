@@ -27,6 +27,10 @@ LD.Game.prototype = {
       this.bug.update();
       this.items.update();
 
+    },
+
+    render: function () {
+      this.level.render();
     }
 
 };

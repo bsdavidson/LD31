@@ -36,7 +36,7 @@ LD.Level.prototype = {
         this.fan_top.animations.add('spin', [0, 1, 2], 10, true);
         this.fan_top.animations.play('spin');
         this.fan_top.body.immovable = true;
-
+        this.fan_top.body.setSize(180, 23, 0, 80);
 
 
         this.fan_light = this.game.add.sprite(330, 104, 'fan_light');
@@ -49,6 +49,7 @@ LD.Level.prototype = {
         // this.game.physics.arcade.enable(this.fan_light);
         this.fan_top.body.immovable = true;
 
+
     },
 
     update: function (player) {
@@ -58,10 +59,14 @@ LD.Level.prototype = {
         this.platforms = this.platforms || this.game.level.platforms;
         this.player = this.player || this.game.player.player;
         this.actor = this.actor || this.game.actor;
-
-
-
-
         //console.log('level update?');
+    },
+
+    render: function() {
+        //console.log(this.game);
+        //this.game.game.debug.body(this.fan_top);
     }
+
+
+
 };
