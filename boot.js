@@ -1,4 +1,4 @@
-(function() {
+LD = (function() {
   'use strict';
 
   var LD = {};
@@ -15,4 +15,6 @@
       this.state.start('Preloader');
     }
   };
+
+  return LD;
 }());
