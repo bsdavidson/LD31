@@ -1,17 +1,16 @@
-"use strict";
-LD.Menu = function (game) {};
+(function() {
+  'use strict';
 
-LD.Menu.prototype = {
+  LD.Menu = function(game) {};
 
-  create: function () {
+  LD.Menu.prototype = {
+    create: function() {
+      this.add.sprite(0, 0, 'titlescreen');
+      this.game.input.onDown.add(this.startGame, this);
+    },
 
-    this.add.sprite(0, 0, 'titlescreen');
-
-    this.game.input.onDown.add(this.startGame, this);
-  },
-
-  startGame: function () {
-    this.state.start('Game');
-  }
-
-};
+    startGame: function() {
+      this.state.start('Game');
+    }
+  };
+}());
