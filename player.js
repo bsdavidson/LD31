@@ -23,7 +23,7 @@
       this.player.body.bounce.y = 0.0;
       this.player.body.gravity.y = 800;
 
-      this.player.animations.add('walk', [0, 1, 2, 3, 4, 5], 10, true);
+      this.player.animations.add('walk', [0, 1, 2, 3, 4, 6], 10, true);
       this.player.animations.add('throw', [12, 13, 14], 6, false);
       this.player.animations.add('pickup', [10, 11], 4, false);
       this.player.animations.add('eww',
@@ -180,14 +180,17 @@
   };
 
   LD.Player.prototype.collectCat = function(cat) {
+    if (cat.flying) {
+      return;
+    }
     if (this.player.hasBaseball) {
       this.player.hasBaseball = false;
       this.baseball.reset(this.player.x + 100, this.player.y - 80);
     }
 
     cat.kill();
+    cat.flying = true;
     this.player.hasCat = true;
-    this.bug.flying = false;
   };
 
   LD.Player.prototype.fire = function(item) {
@@ -199,6 +202,7 @@
         this.game.input.activePointer, 500);
     } else if (this.player.hasCat) {
       this.player.hasCat = false;
+      this.actor.cat.flying = true;
       this.actor.cat.walkTimer = null;
       item.reset(this.player.x, this.player.y - 80);
       this.player.animations.play('throw');

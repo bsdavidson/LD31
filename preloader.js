@@ -18,6 +18,7 @@
       this.load.image('baseball', 'assets/baseball.png');
       this.load.image('watergun', 'assets/water_gun.png');
       this.load.image('tv', 'assets/tv.png');
+      this.load.image('bed', 'assets/bed.png');
       this.load.image('console', 'assets/console.png');
 
       // Sprite Sheets
@@ -26,6 +27,7 @@
       this.load.spritesheet('cat', 'assets/cat_ani.png', 64, 48);
       this.load.spritesheet('brian_ani', 'assets/little_brian_ani.png',
         55, 100);
+      this.load.spritesheet('stars', 'assets/starscape.png', 128, 128);
 
       // Tile Map
       this.load.tilemap('room', 'assets/room_tiled.json', null,
