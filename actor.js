@@ -17,15 +17,17 @@ LD.Actor.prototype = {
     this.cat.meow = this.game.add.audio('cat_meow');
     this.cat.hiss = this.game.add.audio('cat_hiss');
     this.cat.attack = this.game.add.audio('cat_attack');
-
     this.cat.body.collideWorldBounds = true;
     this.cat.body.bounce.y = 0.0;
     this.cat.body.bounce.x = 0.0;
     this.cat.body.gravity.y = 1200;
     this.cat.body.drag.x = 100;
     this.cat.body.drag.y = 100;
+
     this.cat.anchor.setTo(0.5, 1);
     this.cat.direction = -1;
+    this.cat.flying = false;
+
     this.cat.pounceTimer = null;
     this.cat.animations.add('sit', CAT_IDLE, 6, true);
     this.cat.animations.add('swish', [0, 1, 2, 3, 2, 1, 0, 0], 10, true);
@@ -80,7 +82,10 @@ LD.Actor.prototype = {
 
     if (this.cat.body.touching.down) {
       this.cat.rotation = 0;
+      this.cat.flying = false;
+
     } else {
+      this.cat.flying = true;
       this.cat.walkTimer = null;
       this.actor.cat.animations.play('pounce');
     }

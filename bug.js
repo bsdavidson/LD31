@@ -67,7 +67,7 @@ LD.Bug.prototype = {
         // console.log('Im Calm');
         this.bug.flying = false;
         this.bug.body.velocity.y = 0;
-        this.bug.body.velocity.x = 1;
+        this.bug.body.velocity.x = 0;
         this.bug.animations.play('stop');
       }
 

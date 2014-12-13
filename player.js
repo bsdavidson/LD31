@@ -7,7 +7,6 @@ LD.Player = function (game) {
     this.itemHolding = null;
     this.hasBaseball = false;
     this.hasCat = false;
-
 };
 
 LD.Player.prototype = {
@@ -186,20 +185,20 @@ LD.Player.prototype.collectToy = function (toy) {
 };
 
 LD.Player.prototype.collectCat = function (cat) {
+    if (cat.flying) { return; }
         if (this.player.hasBaseball){
             this.player.hasBaseball = false;
             this.baseball.reset(this.player.x + 100, this.player.y - 80);
         }
-
         cat.kill();
         this.player.hasCat = true;
-        this.bug.flying = false;
-
+        cat.flying = true;
 };
 
 
 
 LD.Player.prototype.fire = function (item) {
+
     if (this.player.hasBaseball) {
         this.player.hasBaseball = false;
         item.reset(this.player.x, this.player.y - 80);
@@ -207,13 +206,13 @@ LD.Player.prototype.fire = function (item) {
         item.rotation = this.game.physics.arcade.moveToPointer(item, 1000, this.game.input.activePointer, 500);
 
     } else if (this.player.hasCat) {
+        this.actor.cat.flying = true;
         this.player.hasCat = false;
         this.actor.cat.walkTimer = null;
         item.reset(this.player.x, this.player.y - 80);
         this.player.animations.play('throw');
         this.actor.cat.attack.play();
         item.rotation = this.game.physics.arcade.moveToPointer(item, 600, this.game.input.activePointer, 500);
-
     }  else {
 
     }
