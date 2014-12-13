@@ -1,17 +1,16 @@
-"use strict";
-LD.Gameover = function(game){};
+(function() {
+  'use strict';
 
-LD.Gameover.prototype = {
+  LD.Gameover = function(game) {};
 
-    create: function () {
-
-    this.add.sprite(0, 0, 'gameoverscreen');
-
-    this.game.input.onDown.add(this.startGame, this);
+  LD.Gameover.prototype = {
+    create: function() {
+      this.add.sprite(0, 0, 'gameoverscreen');
+      this.game.input.onDown.add(this.startGame, this);
     },
 
     startGame: function() {
       this.state.start('Menu');
     }
-
-};
+  };
+}());
