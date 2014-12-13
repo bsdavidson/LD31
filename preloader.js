@@ -1,10 +1,10 @@
-"use strict";
-LD.Preloader = function(game){};
-LD.Preloader.prototype = {
+(function() {
+  'use strict';
 
-    preload: function () {
+  LD.Preloader = function(game) {};
 
-
+  LD.Preloader.prototype = {
+    preload: function() {
       this.stage.backgroundColor = '#DDDDDD';
       // Load sprites
       this.load.image('titlescreen', 'assets/title_screen.png');
@@ -25,11 +25,13 @@ LD.Preloader.prototype = {
       this.load.spritesheet('fan_top', 'assets/fan_top.png', 192, 102);
       this.load.spritesheet('bug_ani', 'assets/little_bug_ani.png', 24, 24);
       this.load.spritesheet('cat', 'assets/cat_ani.png', 64, 48);
-      this.load.spritesheet('brian_ani', 'assets/little_brian_ani.png', 55, 100);
+      this.load.spritesheet('brian_ani', 'assets/little_brian_ani.png',
+        55, 100);
       this.load.spritesheet('stars', 'assets/starscape.png', 128, 128);
 
       // Tile Map
-      this.load.tilemap('room', 'assets/room_tiled.json', null, Phaser.Tilemap.TILED_JSON);
+      this.load.tilemap('room', 'assets/room_tiled.json', null,
+        Phaser.Tilemap.TILED_JSON);
 
       // Sounds
       this.load.audio('fly_sound', 'assets/fly.ogg');
@@ -38,12 +40,11 @@ LD.Preloader.prototype = {
       this.load.audio('cat_meow', 'assets/cat_meow.ogg');
       this.load.audio('cat_attack', 'assets/cat_attack.ogg');
       this.load.audio('cat_hiss', 'assets/cat_hiss.ogg');
-
     },
 
-    create: function () {
-      console.log("preloader create");
+    create: function() {
+      console.log('preloader create');
       this.state.start('Menu');
     }
-
-};
+  };
+}());
