@@ -22,7 +22,7 @@ LD.Player.prototype = {
         this.player.body.bounce.y = 0.0;
         this.player.body.gravity.y = 800;
 
-        this.player.animations.add('walk', [0, 1, 2, 3, 4, 5], 10, true);
+        this.player.animations.add('walk', [0, 1, 2, 3, 4, 6], 10, true);
         this.player.animations.add('throw', [12, 13, 14],6, false);
         this.player.animations.add('pickup', [10, 11], 4, false);
         this.player.animations.add('eww', [7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7, 8, 9, 8, 7], 10, false);
