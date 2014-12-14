@@ -3,7 +3,6 @@
 
   LD.Actor = function(game) {
     this.game = game;
-    this.walkTimer = null;
   };
 
   var CAT_IDLE = [
@@ -29,6 +28,7 @@
       this.cat.anchor.setTo(0.5, 1);
       this.cat.direction = -1;
       this.cat.flying = false;
+      this.cat.walkTimer = null;
 
       this.cat.pounceTimer = null;
       this.cat.animations.add('sit', CAT_IDLE, 6, true);
@@ -44,17 +44,14 @@
 
     update: function() {
       this.pointers();
+
       this.game.physics.arcade.collide(this.cat, this.platforms);
       this.game.physics.arcade.overlap(this.cat, this.player, function() {
         if (this.cat.body.touching.down && !this.player.hasCat) {
-          if (this.cat.walkTimer) {
-            this.cat.walkTimer = this.game.time.now;
-            this.walk();
-          } else {
+          if (!this.cat.walkTimer) {
             this.cat.meow.play();
-            this.cat.walkTimer = this.game.time.now;
-            this.walk();
           }
+          this.cat.walkTimer = this.game.time.now;
         }
       }, null, this);
 
@@ -76,58 +73,58 @@
         }
       }, null, this);
 
-      var physics = this.game.physics;
-      if ((this.cat.walkTimer && this.cat.body.touching.down) ||
-        physics.arcade.distanceBetween(this.cat, this.player) > 80) {
-        this.walk();
-      }
-
       if (this.cat.body.touching.down) {
         this.cat.rotation = 0;
-        this.cat.flying = false;
+        if (this.cat.flying) {
+          this.cat.flying = false;
+          this.sit();
+        }
       } else {
         this.cat.flying = true;
         this.cat.walkTimer = null;
         this.actor.cat.animations.play('pounce');
       }
-    }
-  };
+      this.walk();
+    },
 
-  LD.Actor.prototype.pointers = function() {
-    this.bug = this.bug || this.game.bug.bug;
-    this.baseball = this.baseball || this.game.items.baseball;
-    this.fanTop = this.fanTop || this.game.level.fanTop;
-    this.platforms = this.platforms || this.game.level.platforms;
-    this.player = this.player || this.game.player.player;
-    this.actor = this.actor || this.game.actor;
-  };
+    pointers: function() {
+      this.bug = this.bug || this.game.bug.bug;
+      this.baseball = this.baseball || this.game.items.baseball;
+      this.fanTop = this.fanTop || this.game.level.fanTop;
+      this.platforms = this.platforms || this.game.level.platforms;
+      this.player = this.player || this.game.player.player;
+      this.actor = this.actor || this.game.actor;
+    },
 
-  LD.Actor.prototype.pounce = function() {
-    if (this.cat.pounceTimer) {
-      var elapsedTime = this.game.time.now - this.cat.pounceTimer;
+    pounce: function() {
+      if (this.cat.pounceTimer) {
+        var elapsedTime = this.game.time.now - this.cat.pounceTimer;
 
-      if (elapsedTime > 4000) {
-        this.cat.pounceTimer = null;
+        if (elapsedTime > 4000) {
+          this.cat.pounceTimer = null;
+        }
+      } else {
+        this.cat.pounceTimer = this.game.time.now;
+        this.cat.animations.play('pounce');
+        this.cat.hiss.play();
+        this.game.physics.arcade.moveToXY(this.cat, 300, 0, this.cat.y - 300,
+          750);
       }
-    } else {
-      this.cat.pounceTimer = this.game.time.now;
-      this.cat.animations.play('pounce');
-      this.cat.hiss.play();
-      this.game.physics.arcade.moveToXY(this.cat, 300, 0, this.cat.y - 300,
-        750);
-    }
-  };
+    },
 
-  LD.Actor.prototype.walk = function() {
-    if (this.cat.walkTimer ||
-      this.game.physics.arcade.distanceBetween(this.cat, this.player) &&
-      this.cat.body.touching.down) {
+    sit: function() {
+      this.cat.animations.play('sit');
+      this.cat.body.velocity.x = 0;
+      this.cat.walkTimer = null;
+    },
+
+    walk: function() {
+      if (!this.cat.walkTimer) {
+        return;
+      }
       var elapsedTime = this.game.time.now - this.cat.walkTimer;
-
       if (elapsedTime > 2000) {
-        this.cat.animations.play('sit');
-        this.cat.body.velocity.x = 0;
-        this.cat.walkTimer = null;
+        this.sit();
       } else {
         if (this.cat.x < 100) {
           this.cat.direction = 1;
