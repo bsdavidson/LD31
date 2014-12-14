@@ -7,15 +7,14 @@
 
   LD.Items.prototype = {
     create: function() {
-      this.bug = this.game.bug;
-      this.player = this.game.player.player;
-
       this.baseball = this.game.add.sprite(190, this.game.world.height - 36,
         'baseball');
       this.baseball.hitSound = this.game.add.audio('ball_hit');
       this.baseball.lastLocation = 'ground';
 
       this.game.physics.arcade.enable(this.baseball);
+      this.baseball.acceleration = 1000;
+
       this.baseball.body.collideWorldBounds = true;
       this.baseball.body.bounce.y = 0.2;
       this.baseball.body.bounce.x = 0.5;
@@ -36,7 +35,6 @@
       };
       this.game.physics.arcade.collide(this.baseball, this.platforms, null,
         onBaseballHitPlatform, this);
-
       // console.log(this.baseball.y, this.game.world.height);
       if (this.baseball.y < 439) {
         //console.log('In the Air');

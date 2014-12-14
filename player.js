@@ -7,8 +7,6 @@
     this.startX = 100;
     this.startY = 100;
     this.itemHolding = null;
-    this.hasBaseball = false;
-    this.hasCat = false;
   };
 
   LD.Player.prototype = {
@@ -37,7 +35,8 @@
         right: this.game.input.keyboard.addKey(Phaser.Keyboard.D),
         fire: this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
         pickup: this.game.input.keyboard.addKey(Phaser.Keyboard.E),
-        drop: this.game.input.keyboard.addKey(Phaser.Keyboard.R)
+        drop: this.game.input.keyboard.addKey(Phaser.Keyboard.R),
+        altPickup: this.game.input.keyboard.addKey(Phaser.Keyboard.T)
       };
     },
 
@@ -48,14 +47,16 @@
       this.game.physics.arcade.collide(this.bug, this.platforms);
 
       this.game.physics.arcade.overlap(this.player, this.baseball, function() {
-        if (this.game.controls.pickup.isDown) {
-          this.collectToy(this.baseball);
+        if (this.game.controls.pickup.isDown &&
+            this.game.controls.pickup.repeats === 1) {
+          this.collectItem(this.baseball);
         }
       }, null, this);
 
       this.game.physics.arcade.overlap(this.player, this.cat, function() {
-        if (this.game.controls.pickup.isDown) {
-          this.collectCat(this.cat);
+        if (this.game.controls.pickup.isDown &&
+            this.game.controls.pickup.repeats === 1) {
+          this.collectItem(this.cat);
         }
       }, null, this);
 
@@ -77,6 +78,15 @@
       this.game.physics.arcade.collide(this.baseball, this.bug, function() {
         this.baseball.hitSound.play();
         this.bug.health -= 10;
+      }, null, this);
+
+      //We hit the cat with the baseball.
+      this.game.physics.arcade.collide(this.baseball, this.cat, function() {
+        if (this.baseball.body.velocity.x > 50 ||
+         this.baseball.body.velocity.x < -50) {
+          this.baseball.hitSound.play();
+          this.cat.hiss.play();
+        }
       }, null, this);
 
       this.game.physics.arcade.overlap(this.bug, this.player, function() {
@@ -147,68 +157,43 @@
         }
 
         if (this.game.input.activePointer.isDown) {
-          if (this.player.hasBaseball) {
-            this.fire(this.baseball);
-          }
-          if (this.player.hasCat) {
-            this.fire(this.cat);
-          }
+          this.fire();
         }
 
-        if (this.game.controls.drop.isDown) {
-          if (this.player.hasBaseball) {
-            this.player.hasBaseball = false;
-            this.baseball.reset(this.player.x + 100, this.player.y - 80);
-          }
-          if (this.player.hasCat) {
-            this.player.hasCat = false;
-            this.cat.reset(this.player.x + 100, this.player.y - 80);
+        if (this.game.controls.drop.isDown &&
+            this.game.controls.adrop.repeats === 1) {
+          if (this.itemHolding) {
+            this.itemHolding.reset(this.player.x + 100, this.player.y - 80);
+            this.itemHolding = null;
           }
         }
       }
     }
   };
 
-  LD.Player.prototype.collectToy = function(toy) {
-    if (this.player.hasCat) {
-      this.player.hasCat = false;
-      this.cat.reset(this.player.x + 100, this.player.y - 80);
+  LD.Player.prototype.collectItem = function(item) {
+    // console.log('item', item);
+    if (this.itemHolding) {
+      this.itemHolding.reset(this.player.x + 50 , this.player.y - 80);
+      this.itemHolding = null;
     }
-    toy.kill();
-    this.player.hasBaseball = true;
-    this.bug.flying = false;
+    this.itemHolding = item;
+    this.itemHolding.kill();
+    this.itemHolding.flying = true;
   };
 
-  LD.Player.prototype.collectCat = function(cat) {
-    if (cat.flying) {
-      return;
-    }
-    if (this.player.hasBaseball) {
-      this.player.hasBaseball = false;
-      this.baseball.reset(this.player.x + 100, this.player.y - 80);
-    }
-
-    cat.kill();
-    cat.flying = true;
-    this.player.hasCat = true;
-  };
-
-  LD.Player.prototype.fire = function(item) {
-    if (this.player.hasBaseball) {
-      this.player.hasBaseball = false;
-      item.reset(this.player.x, this.player.y - 80);
+  LD.Player.prototype.fire = function() {
+    console.log(this.itemHolding);
+    if (this.itemHolding) {
+      this.itemHolding.reset(this.player.x, this.player.y - 80);
       this.player.animations.play('throw');
-      item.rotation = this.game.physics.arcade.moveToPointer(item, 1000,
+      this.itemHolding.rotation = this.game.physics.arcade.moveToPointer(
+        this.itemHolding, this.itemHolding.acceleration,
         this.game.input.activePointer, 500);
-    } else if (this.player.hasCat) {
-      this.player.hasCat = false;
-      this.cat.flying = true;
-      this.cat.walkTimer = null;
-      item.reset(this.player.x, this.player.y - 80);
-      this.player.animations.play('throw');
-      this.cat.attack.play();
-      item.rotation = this.game.physics.arcade.moveToPointer(item, 600,
-        this.game.input.activePointer, 500);
+      if (this.itemHolding.throwSound) {
+        this.itemHolding.throwSound.play();
+      }
+      this.itemHolding = null;
     }
   };
 
