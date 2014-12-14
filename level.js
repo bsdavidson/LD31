@@ -11,6 +11,7 @@
 
   LD.Level.prototype = {
     create: function() {
+      this.timer = this.game.time.now;
       this.map = this.game.add.tilemap('room');
       this.map.addTilesetImage('room_tiles', 'tiles');
 
@@ -39,7 +40,9 @@
 
       this.starscape = this.game.add.sprite(555, 200, 'stars');
       this.starscape.animations.add('twinkle', TWINKLE, 1, true);
+      this.starscape.animations.add('shootingstar', SHOOTINGSTAR, 20, false);
       this.game.world.addAt(this.starscape, 1);
+
       this.starscape.animations.play('twinkle');
 
       this.fanLight = this.game.add.sprite(330, 104, 'fan_light');
@@ -56,6 +59,7 @@
     },
 
     update: function(player) {
+      this.shootingStar();
       this.bug = this.bug || this.game.bug;
       this.baseball = this.baseball || this.game.baseball;
       this.fanTop = this.fanTop || this.game.level.fanTop;
@@ -67,5 +71,16 @@
     render: function() {
       // this.game.game.debug.body(this.bug);
     }
+  };
+
+  LD.Level.prototype.shootingStar = function() {
+    var time = this.game.time.now - this.timer;
+    if (time > 15000) {
+      this.starscape.animations.play('shootingstar');
+      this.timer = this.game.time.now;
+    }
+    this.starscape.events.onAnimationComplete.add(function() {
+      this.starscape.animations.play('twinkle');
+    }, this);
   };
 }());
