@@ -82,8 +82,7 @@
 
       //We hit the cat with the baseball.
       this.game.physics.arcade.collide(this.baseball, this.cat, function() {
-        if (this.baseball.body.velocity.x > 50 ||
-         this.baseball.body.velocity.x < -50) {
+        if (Math.abs(this.baseball.body.velocity.x) > 50) {
           this.baseball.hitSound.play();
           this.cat.hiss.play();
         }
@@ -199,7 +198,7 @@
 
   LD.Player.prototype.pointers = function() {
     this.bug = this.bug || this.game.bug;
-    this.baseball = this.baseball || this.game.items.baseball;
+    this.baseball = this.baseball || this.game.baseball;
     this.fanTop = this.fanTop || this.game.level.fanTop;
     this.platforms = this.platforms || this.game.level.platforms;
     this.player = this.player || this.game.player.player;

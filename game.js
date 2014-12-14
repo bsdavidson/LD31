@@ -9,13 +9,13 @@
       this.bug = new LD.Bug(this);
       this.player = new LD.Player(this, 30, 120);
       this.cat = new LD.Cat(this, 30, 120);
-      this.items = new LD.Items(this);
+      this.baseball = new LD.Baseball(this);
 
       this.level.create();
       this.game.world.add(this.bug);
       this.game.world.add(this.bug.healthText);
       this.game.world.add(this.cat);
-      this.items.create();
+      this.game.world.add(this.baseball);
       this.player.create();
     },
 
@@ -24,7 +24,7 @@
       this.cat.update();
       this.player.update();
       this.bug.update();
-      this.items.update();
+      this.baseball.update();
     },
 
     render: function() {
