@@ -11,7 +11,7 @@
       this.cat = new LD.Cat(this, 30, 120);
       this.baseball = new LD.Baseball(this);
 
-      this.level.create();
+      this.level.add();
       this.game.world.add(this.bug);
       this.game.world.add(this.bug.healthText);
       this.game.world.add(this.cat);
