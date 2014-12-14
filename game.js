@@ -8,19 +8,20 @@
       this.level = new LD.Level(this);
       this.bug = new LD.Bug(this);
       this.player = new LD.Player(this, 30, 120);
-      this.actor = new LD.Actor(this, 30, 120);
+      this.cat = new LD.Cat(this, 30, 120);
       this.items = new LD.Items(this);
 
       this.level.create();
-      this.bug.create();
-      this.actor.create();
+      this.game.world.add(this.bug);
+      this.game.world.add(this.bug.healthText);
+      this.game.world.add(this.cat);
       this.items.create();
       this.player.create();
     },
 
     update: function() {
       this.level.update();
-      this.actor.update();
+      this.cat.update();
       this.player.update();
       this.bug.update();
       this.items.update();

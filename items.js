@@ -7,7 +7,7 @@
 
   LD.Items.prototype = {
     create: function() {
-      this.bug = this.game.bug.bug;
+      this.bug = this.game.bug;
       this.player = this.game.player.player;
 
       this.baseball = this.game.add.sprite(190, this.game.world.height - 36,
@@ -46,7 +46,7 @@
   };
 
   LD.Items.prototype.pointers = function() {
-    this.bug = this.bug || this.game.bug.bug;
+    this.bug = this.bug || this.game.bug;
     this.baseball = this.baseball || this.game.items.baseball;
     this.fanTop = this.fanTop || this.game.level.fanTop;
     this.platforms = this.platforms || this.game.level.platforms;

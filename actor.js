@@ -1,145 +1,137 @@
 (function() {
   'use strict';
 
-  LD.Actor = function(game) {
-    this.game = game;
-    this.walkTimer = null;
-  };
-
   var CAT_IDLE = [
     0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 1, 2, 3, 2, 1, 0, 0, 0, 0, 0, 0, 0
   ];
+  var CAT_KILL_HEALTH = 30;
+  var CAT_POUNCE_DISTANCE = 200;
+  var CAT_POUNCE_TIME = 4000;
+  var CAT_WALK_TIME = 2000;
 
-  LD.Actor.prototype = {
-    create: function() {
-      this.cat = this.game.add.sprite(300, this.game.world.height - 32, 'cat');
-      this.game.physics.arcade.enable(this.cat);
+  LD.Cat = function(gameState) {
+    Phaser.Sprite.call(this, gameState.game, 300,
+      gameState.game.world.height - 32, 'cat');
 
-      this.cat.meow = this.game.add.audio('cat_meow');
-      this.cat.hiss = this.game.add.audio('cat_hiss');
-      this.cat.attack = this.game.add.audio('cat_attack');
+    this.gameState = gameState;
 
-      this.cat.body.collideWorldBounds = true;
-      this.cat.body.bounce.y = 0.0;
-      this.cat.body.bounce.x = 0.0;
-      this.cat.body.gravity.y = 1200;
-      this.cat.body.drag.x = 100;
-      this.cat.body.drag.y = 100;
+    this.game.physics.arcade.enable(this);
 
-      this.cat.anchor.setTo(0.5, 1);
-      this.cat.direction = -1;
-      this.cat.flying = false;
+    this.meow = this.game.add.audio('cat_meow');
+    this.hiss = this.game.add.audio('cat_hiss');
+    this.attack = this.game.add.audio('cat_attack');
 
-      this.cat.pounceTimer = null;
-      this.cat.animations.add('sit', CAT_IDLE, 6, true);
-      this.cat.animations.add('swish', [0, 1, 2, 3, 2, 1, 0, 0], 10, true);
-      this.cat.animations.add('walk', [5, 6, 7, 8, 9], 7, true);
-      this.cat.animations.add('pounce', [10], 10, true);
-      this.cat.animations.add('eat',
-        [11, 12, 11, 12, 11, 12, 11, 12, 11, 12], 9, false);
+    this.body.collideWorldBounds = true;
+    this.body.bounce.y = 0.0;
+    this.body.bounce.x = 0.0;
+    this.body.gravity.y = 1000;
+    this.body.drag.x = 100;
+    this.body.drag.y = 100;
 
-      this.cat.animations.play('sit');
-      this.game.physics.arcade.enable(this.cat);
-    },
+    this.anchor.setTo(0.5, 1);
+    this.direction = -1;
+    this.flying = false;
+    this.walkTimer = 0;
+    this.acceleration = 1200;
+    this.throwSound = this.attack;
 
-    update: function() {
-      this.pointers();
-      this.game.physics.arcade.collide(this.cat, this.platforms);
-      this.game.physics.arcade.overlap(this.cat, this.player, function() {
-        if (this.cat.body.touching.down && !this.player.hasCat) {
-          if (this.cat.walkTimer) {
-            this.cat.walkTimer = this.game.time.now;
-            this.walk();
-          } else {
-            this.cat.meow.play();
-            this.cat.walkTimer = this.game.time.now;
-            this.walk();
-          }
-        }
-      }, null, this);
+    this.pounceTimer = 0;
+    this.animations.add('sit', CAT_IDLE, 6, true);
+    this.animations.add('swish', [0, 1, 2, 3, 2, 1, 0, 0], 10, true);
+    this.animations.add('walk', [5, 6, 7, 8, 9], 7, true);
+    this.animations.add('pounce', [10], 10, true);
+    this.animations.add('eat',
+      [11, 12, 11, 12, 11, 12, 11, 12, 11, 12], 9, false);
 
-      if (this.game.physics.arcade.distanceBetween(this.cat, this.bug) < 200 &&
-          !this.player.controlDisabled && this.cat.body.touching.down) {
-        this.pounce();
-        this.cat.walkTimer = null;
-      }
+    this.sit();
+  };
 
-      this.game.physics.arcade.overlap(this.bug, this.cat, function() {
-        if (this.bug.health < 30) {
-          this.cat.walkTimer = null;
-          this.bug.kill();
+  LD.Cat.prototype = Object.create(Phaser.Sprite.prototype);
+  LD.Cat.prototype.constructor = LD.Cat;
 
-          this.cat.body.velocity.x = 0;
-          this.cat.body.velocity.y = 0;
+  LD.Cat.prototype.update = function() {
+    var platforms = this.gameState.level.platforms;
+    this.game.physics.arcade.collide(this, platforms);
 
-          this.game.state.start('GameWonCat');
-        }
-      }, null, this);
-
-      var physics = this.game.physics;
-      if ((this.cat.walkTimer && this.cat.body.touching.down) ||
-        physics.arcade.distanceBetween(this.cat, this.player) > 80) {
-        this.walk();
-      }
-
-      if (this.cat.body.touching.down) {
-        this.cat.rotation = 0;
-        this.cat.flying = false;
-      } else {
-        this.cat.flying = true;
-        this.cat.walkTimer = null;
-        this.actor.cat.animations.play('pounce');
-      }
+    if (!this.gameState.player.player.controlDisabled) {
+      this.checkPlayer();
+      this.checkBug();
     }
-  };
 
-  LD.Actor.prototype.pointers = function() {
-    this.bug = this.bug || this.game.bug.bug;
-    this.baseball = this.baseball || this.game.items.baseball;
-    this.fanTop = this.fanTop || this.game.level.fanTop;
-    this.platforms = this.platforms || this.game.level.platforms;
-    this.player = this.player || this.game.player.player;
-    this.actor = this.actor || this.game.actor;
-  };
-
-  LD.Actor.prototype.pounce = function() {
-    if (this.cat.pounceTimer) {
-      var elapsedTime = this.game.time.now - this.cat.pounceTimer;
-
-      if (elapsedTime > 4000) {
-        this.cat.pounceTimer = null;
+    if (this.body.touching.down) {
+      this.flying = false;
+      this.rotation = 0;
+      if (this.walkTimer > this.game.time.now) {
+        this.walk();
+      } else {
+        this.sit();
       }
     } else {
-      this.cat.pounceTimer = this.game.time.now;
-      this.cat.animations.play('pounce');
-      this.cat.hiss.play();
-      this.game.physics.arcade.moveToXY(this.cat, 300, 0, this.cat.y - 300,
-        750);
+      this.fly();
     }
   };
 
-  LD.Actor.prototype.walk = function() {
-    if (this.cat.walkTimer ||
-      this.game.physics.arcade.distanceBetween(this.cat, this.player) &&
-      this.cat.body.touching.down) {
-      var elapsedTime = this.game.time.now - this.cat.walkTimer;
-
-      if (elapsedTime > 2000) {
-        this.cat.animations.play('sit');
-        this.cat.body.velocity.x = 0;
-        this.cat.walkTimer = null;
-      } else {
-        if (this.cat.x < 100) {
-          this.cat.direction = 1;
-          this.cat.scale.x = 1;
-          this.cat.scale.x = -1;
-        } else if (this.cat.y > 650) {
-          this.cat.direction = -1;
-          this.cat.scale.x = 1;
-        }
-        this.cat.body.velocity.x = 50 * this.cat.direction;
-        this.cat.animations.play('walk');
+  LD.Cat.prototype.checkBug = function() {
+    // Try to pounce on the bug if it's close enough.
+    var bugDistance = this.game.physics.arcade.distanceBetween(
+       this, this.gameState.bug);
+    if (this.body.touching.down && bugDistance < CAT_POUNCE_DISTANCE) {
+      this.walkTimer = 0;
+      if (this.pounceTimer <= this.game.time.now) {
+        this.pounceTimer = this.game.time.now + CAT_POUNCE_TIME;
+        this.animations.play('pounce');
+        this.hiss.play();
+        this.game.physics.arcade.moveToXY(this, 300, 0, this.y - 300, 750);
       }
     }
+
+    // If touching the bug and the bug is hurt enough, kill the bug.
+    this.game.physics.arcade.overlap(this.gameState.bug, this, function() {
+      if (this.gameState.bug.health < CAT_KILL_HEALTH) {
+        this.walkTimer = 0;
+        this.body.velocity.x = 0;
+        this.body.velocity.y = 0;
+        this.gameState.bug.kill();
+        this.game.state.start('GameWonCat');
+      }
+    }, null, this);
+  };
+
+  LD.Cat.prototype.checkPlayer = function() {
+    // Make the cat walk away if the player gets too close.
+    if (this.body.touching.down) {
+      var player = this.gameState.player.player;
+      this.game.physics.arcade.overlap(this, player, function() {
+        if (!this.walkTimer) {
+          this.meow.play();
+        }
+        this.walkTimer = this.game.time.now + CAT_WALK_TIME;
+      }, null, this);
+    }
+  };
+
+  LD.Cat.prototype.fly = function() {
+    this.flying = true;
+    this.walkTimer = 0;
+    this.animations.play('pounce');
+  };
+
+  LD.Cat.prototype.sit = function() {
+    this.body.velocity.x = 0;
+    this.flying = false;
+    this.walkTimer = 0;
+    this.animations.play('sit');
+  };
+
+  LD.Cat.prototype.walk = function() {
+    if (this.x < 100) {
+      this.direction = 1;
+      this.scale.x = -1;
+    } else if (this.y > 650) {
+      this.direction = -1;
+      this.scale.x = 1;
+    }
+    this.body.velocity.x = 50 * this.direction;
+    this.animations.play('walk');
   };
 }());

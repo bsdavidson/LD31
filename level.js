@@ -56,7 +56,7 @@
     },
 
     update: function(player) {
-      this.bug = this.bug || this.game.bug.bug;
+      this.bug = this.bug || this.game.bug;
       this.baseball = this.baseball || this.game.items.baseball;
       this.fanTop = this.fanTop || this.game.level.fanTop;
       this.platforms = this.platforms || this.game.level.platforms;
@@ -65,7 +65,7 @@
     },
 
     render: function() {
-      // this.game.game.debug.body(this.fanTop);
+      // this.game.game.debug.body(this.bug);
     }
   };
 }());

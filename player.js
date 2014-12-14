@@ -53,9 +53,9 @@
         }
       }, null, this);
 
-      this.game.physics.arcade.overlap(this.player, this.actor.cat, function() {
+      this.game.physics.arcade.overlap(this.player, this.cat, function() {
         if (this.game.controls.pickup.isDown) {
-          this.collectCat(this.actor.cat);
+          this.collectCat(this.cat);
         }
       }, null, this);
 
@@ -151,7 +151,7 @@
             this.fire(this.baseball);
           }
           if (this.player.hasCat) {
-            this.fire(this.actor.cat);
+            this.fire(this.cat);
           }
         }
 
@@ -162,7 +162,7 @@
           }
           if (this.player.hasCat) {
             this.player.hasCat = false;
-            this.actor.cat.reset(this.player.x + 100, this.player.y - 80);
+            this.cat.reset(this.player.x + 100, this.player.y - 80);
           }
         }
       }
@@ -172,7 +172,7 @@
   LD.Player.prototype.collectToy = function(toy) {
     if (this.player.hasCat) {
       this.player.hasCat = false;
-      this.actor.cat.reset(this.player.x + 100, this.player.y - 80);
+      this.cat.reset(this.player.x + 100, this.player.y - 80);
     }
     toy.kill();
     this.player.hasBaseball = true;
@@ -202,22 +202,22 @@
         this.game.input.activePointer, 500);
     } else if (this.player.hasCat) {
       this.player.hasCat = false;
-      this.actor.cat.flying = true;
-      this.actor.cat.walkTimer = null;
+      this.cat.flying = true;
+      this.cat.walkTimer = null;
       item.reset(this.player.x, this.player.y - 80);
       this.player.animations.play('throw');
-      this.actor.cat.attack.play();
+      this.cat.attack.play();
       item.rotation = this.game.physics.arcade.moveToPointer(item, 600,
         this.game.input.activePointer, 500);
     }
   };
 
   LD.Player.prototype.pointers = function() {
-    this.bug = this.bug || this.game.bug.bug;
+    this.bug = this.bug || this.game.bug;
     this.baseball = this.baseball || this.game.items.baseball;
     this.fanTop = this.fanTop || this.game.level.fanTop;
     this.platforms = this.platforms || this.game.level.platforms;
     this.player = this.player || this.game.player.player;
-    this.actor = this.actor || this.game.actor;
+    this.cat = this.cat || this.game.cat;
   };
 }());
