@@ -24,7 +24,7 @@
     this.body.collideWorldBounds = true;
     this.body.bounce.y = 0.0;
     this.body.bounce.x = 0.0;
-    this.body.gravity.y = 1000;
+    this.body.gravity.y = 700;
     this.body.drag.x = 100;
     this.body.drag.y = 100;
 
@@ -57,6 +57,12 @@
       this.checkPlayer();
       this.checkBug();
     }
+
+    var fanTop = this.gameState.level.fanTop;
+    var player = this.gameState.player;
+    this.game.physics.arcade.collide(this, fanTop, function() {
+      this.gameState.baseball.hitSound.play();
+    }, null, this);
 
     if (this.body.touching.down) {
       this.flying = false;
