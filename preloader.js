@@ -17,12 +17,12 @@
       this.load.image('fan_light', 'assets/fan_light.png');
       this.load.image('baseball', 'assets/baseball.png');
       this.load.image('watergun', 'assets/water_gun.png');
-      this.load.image('tv', 'assets/tv.png');
       this.load.image('bed', 'assets/bed.png');
       this.load.image('console', 'assets/console.png');
 
       // Sprite Sheets
       this.load.spritesheet('fan_top', 'assets/fan_top.png', 192, 102);
+      this.load.spritesheet('tv', 'assets/tv.png', 128, 108);
       this.load.spritesheet('bug_ani', 'assets/little_bug_ani.png', 24, 24);
       this.load.spritesheet('cat', 'assets/cat_ani.png', 64, 48);
       this.load.spritesheet('brian_ani', 'assets/little_brian_ani.png',

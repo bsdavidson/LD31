@@ -73,6 +73,7 @@
 
   LD.Level.prototype.update = function(player) {
     this.updateShootingStar();
+    this.tv.frame = 1;
   };
 
   LD.Level.prototype.updateShootingStar = function() {
