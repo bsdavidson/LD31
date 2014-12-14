@@ -49,6 +49,7 @@
 
     this.bed = this.game.make.sprite(20, this.game.world.height - 130, 'bed');
     this.tv = this.game.make.sprite(330, this.game.world.height - 200, 'tv');
+
     this.console = this.game.make.sprite(333, this.game.world.height - 110,
       'console');
 

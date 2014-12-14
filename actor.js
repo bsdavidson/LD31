@@ -53,7 +53,7 @@
     var platforms = this.gameState.level.platforms;
     this.game.physics.arcade.collide(this, platforms);
 
-    if (!this.gameState.player.player.controlDisabled) {
+    if (!this.gameState.player.controlDisabled) {
       this.checkPlayer();
       this.checkBug();
     }
@@ -106,7 +106,7 @@
   LD.Cat.prototype.checkPlayer = function() {
     // Make the cat walk away if the player gets too close.
     if (this.body.touching.down) {
-      var player = this.gameState.player.player;
+      var player = this.gameState.player;
       this.game.physics.arcade.overlap(this, player, function() {
         if (!this.walkTimer) {
           this.meow.play();

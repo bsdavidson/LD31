@@ -7,8 +7,8 @@
     create: function() {
       this.level = new LD.Level(this);
       this.bug = new LD.Bug(this);
-      this.player = new LD.Player(this, 30, 120);
-      this.cat = new LD.Cat(this, 30, 120);
+      this.player = new LD.Player(this);
+      this.cat = new LD.Cat(this);
       this.baseball = new LD.Baseball(this);
 
       this.level.add();
@@ -16,7 +16,7 @@
       this.game.world.add(this.bug.healthText);
       this.game.world.add(this.cat);
       this.game.world.add(this.baseball);
-      this.player.create();
+      this.game.world.add(this.player);
     },
 
     update: function() {
