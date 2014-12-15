@@ -3,6 +3,8 @@
 
   var SHOOTING_STAR = [8, 9, 10, 11, 12, 13];
   var TWINKLE = [0, 1, 2, 3, 4, 5, 6, 7];
+  var FAN_SHAKE = [1, 2, 3, 4, 5, 6, 7, 0];
+  var FAN_BREAK = [8, 9, 10, 11, 12];
 
   LD.Level = function(gameState) {
     this.gameState = gameState;
@@ -43,9 +45,13 @@
 
     this.starscape.animations.play('twinkle');
 
-    this.fanLight = this.game.make.sprite(330, 104, 'fan_light');
+    this.fanLight = this.game.make.sprite(330, 103, 'fan_light');
     this.game.physics.arcade.enable(this.fanLight);
-    this.fanTop.body.immovable = true;
+    this.fanLight.body.immovable = true;
+    this.fanLight.animations.add('shake', FAN_SHAKE, 10, false);
+    this.fanLight.animations.add('break', FAN_BREAK, 10, false);
+    this.fanLight.body.setSize(40, 23, 40, 0);
+    this.fanLight.status = 'good'; // good or broken
 
     this.bed = this.game.make.sprite(20, this.game.world.height - 130, 'bed');
 
@@ -64,20 +70,25 @@
 
     // this.game.physics.arcade.enable(this.fanLight);
     this.fanTop.body.immovable = true;
+
+    this.powerBar = this.game.make.sprite(550, 8, 'health');
+    this.bugHealth = this.game.make.sprite(60, 8, 'health');
   };
 
   LD.Level.prototype.add = function() {
-    this.game.world.add(this.platforms);
     this.game.world.add(this.fanTop);
+    this.game.world.add(this.platforms);
     this.game.world.add(this.starscape);
     this.game.world.add(this.fanLight);
     this.game.world.add(this.bed);
     this.game.world.add(this.tv);
     this.game.world.add(this.console);
+    this.game.world.add(this.powerBar);
+    this.game.world.add(this.bugHealth);
   };
 
   LD.Level.prototype.render = function() {
-    // this.gameState.game.debug.body(this.bug);
+   //ddda this.gameState.game.debug.body(this.fanLight);
   };
 
   LD.Level.prototype.update = function(player) {

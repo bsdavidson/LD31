@@ -16,9 +16,8 @@
       this.load.image('tiles', 'assets/room_tiles.png');
       this.load.image('floor', 'assets/carpet_tile.png');
       this.load.image('ceiling', 'assets/ceiling_tile.png');
-      this.load.image('fan_light', 'assets/fan_light.png');
       this.load.image('baseball', 'assets/baseball.png');
-      this.load.image('water_gun', 'assets/water_gun.png');
+      this.load.image('water', 'assets/water.png');
       this.load.image('bed', 'assets/bed.png');
       this.load.image('console', 'assets/console.png');
       this.load.image('health', 'assets/health_bar.png');
@@ -31,6 +30,8 @@
       this.load.spritesheet('brian_ani', 'assets/little_brian_ani.png',
         55, 100);
       this.load.spritesheet('stars', 'assets/starscape.png', 128, 128);
+      this.load.spritesheet('fan_light', 'assets/fan_light.png', 128, 48);
+      this.load.spritesheet('water_gun', 'assets/water_gun.png', 16, 12);
 
       // Tile Map
       this.load.tilemap('room', 'assets/room_tiled.json', null,

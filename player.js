@@ -133,12 +133,18 @@
         this.lastIncrement = 0;
       }
 
+      if (this.game.controls.pickup.isDown &&
+          this.game.controls.pickup.repeats === 1) {
+        var holdable = this.gameState.holdable;
+        this.game.physics.arcade.overlap(this, holdable, function(_, item) {
+          this.collectItem(item);
+        }, null, this);
+      }
       if (this.game.controls.drop.isDown &&
-          this.game.controls.drop.repeats === 1) {
-        if (this.itemHolding) {
-          this.itemHolding.reset(this.x + 100, this.y - 80);
-          this.itemHolding = null;
-        }
+          this.game.controls.drop.repeats === 1 &&
+          this.itemHolding) {
+        this.itemHolding.reset(this.x + 100, this.y - 80);
+        this.itemHolding = null;
       }
     }
   };
@@ -149,26 +155,31 @@
       this.itemHolding = null;
     }
     this.itemHolding = item;
-    this.itemHolding.kill();
+    if (this.gameState.throwable.indexOf(this.itemHolding) !== -1) {
+      this.itemHolding.kill();
+    }
     this.itemHolding.flying = true;
   };
 
   LD.Player.prototype.fire = function(power) {
-    if (this.itemHolding) {
-      this.itemHolding.reset(this.x, this.y - 50);
-      if (this.itemHolding.body) {
-        this.itemHolding.body.touching.left = false;
-        this.itemHolding.body.touching.right = false;
-        this.itemHolding.body.touching.up = false;
-        this.itemHolding.body.touching.down = false;
+    var item = this.itemHolding;
+    if (!item) {
+      return;
+    }
+    if (this.gameState.throwable.indexOf(item) !== -1) {
+      item.reset(this.x, this.y - 50);
+      if (item.body) {
+        item.body.touching.left = false;
+        item.body.touching.right = false;
+        item.body.touching.up = false;
+        item.body.touching.down = false;
       }
       this.animations.play('throw');
-      this.itemHolding.flying = true;
-      this.itemHolding.rotation = this.game.physics.arcade.moveToPointer(
-        this.itemHolding, power,
-        this.game.input.activePointer);
-      if (this.itemHolding.throwSound) {
-        this.itemHolding.throwSound.play();
+      item.flying = true;
+      item.rotation = this.game.physics.arcade.moveToPointer(
+        item, power, this.game.input.activePointer);
+      if (item.throwSound) {
+        item.throwSound.play();
       }
       this.itemHolding = null;
     }
