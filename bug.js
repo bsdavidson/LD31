@@ -48,6 +48,8 @@
     //     this.game.player.x + 400, this.game.player.y + 100, 750);
     // }
 
+    this.game.physics.arcade.collide(this, this.gameState.level.platforms);
+
     if (this.health <= 0) {
       this.animations.play('die');
       this.body.gravity.y = 20;

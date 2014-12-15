@@ -47,8 +47,7 @@
     this.platforms = this.gameState.level.platforms;
     this.cat = this.gameState.cat;
 
-    this.game.physics.arcade.collide(this, this.platforms);
-    this.game.physics.arcade.collide(this.bug, this.platforms);
+    this.game.physics.arcade.collide(this, this.gameState.level.platforms);
 
     if (this.game.controls.pickup.isDown &&
         this.game.controls.pickup.repeats === 1) {
@@ -69,14 +68,6 @@
           this.game.state.start('Gameover');
         }, this);
       }, null, this);
-    }
-
-    if (this.baseball.body.velocity.x > 2) {
-      this.baseball.rotation += 0.1;
-    } else if (this.baseball.body.velocity.x < -2) {
-      this.baseball.rotation += -0.1;
-    } else {
-      this.baseball.rotation = 0;
     }
 
     if (!this.controlDisabled) {
@@ -122,7 +113,6 @@
   };
 
   LD.Player.prototype.collectItem = function(item) {
-    // console.log('item', item);
     if (this.itemHolding) {
       this.itemHolding.reset(this.x + 50 , this.y - 80);
       this.itemHolding = null;

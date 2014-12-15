@@ -27,6 +27,7 @@
     this.body.gravity.y = 700;
     this.body.drag.x = 100;
     this.body.drag.y = 100;
+    this.body.setSize(35, 35, -7, -5);
 
     this.anchor.setTo(0.5, 1);
     this.direction = -1;
@@ -76,9 +77,13 @@
 
   LD.Cat.prototype.checkBaseball = function() {
     var baseball = this.gameState.baseball;
+
     this.game.physics.arcade.collide(this, baseball, function() {
       baseball.onHitCat(this);
-      this.hiss.play();
+      if (Math.abs(baseball.body.velocity.x) > 20 ||
+          Math.abs(baseball.body.velocity.y) > 20) {
+        this.hiss.play();
+      }
     }, null, this);
   };
 
@@ -86,6 +91,7 @@
     var fanTop = this.gameState.level.fanTop;
     this.game.physics.arcade.collide(this, fanTop, function() {
       this.gameState.baseball.hitSound.play();
+      this.game.physics.arcade.moveToXY(this, this.x, this.y , 950);
     }, null, this);
   };
 
@@ -149,6 +155,7 @@
       this.direction = -1;
       this.scale.x = 1;
     }
+    // this.body.setSize(43, 35, -7, -5);
     this.body.velocity.x = 50 * this.direction;
     this.animations.play('walk');
   };

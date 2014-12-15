@@ -68,7 +68,7 @@
   };
 
   LD.Level.prototype.render = function() {
-    // this.game.game.debug.body(this.bug);
+    // this.gameState.game.debug.body(this.bug);
   };
 
   LD.Level.prototype.update = function(player) {

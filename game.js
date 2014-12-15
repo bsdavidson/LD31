@@ -21,10 +21,6 @@
 
     update: function() {
       this.level.update();
-      this.cat.update();
-      this.player.update();
-      this.bug.update();
-      this.baseball.update();
     },
 
     render: function() {

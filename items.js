@@ -56,5 +56,12 @@
       this.game.physics.arcade.moveToXY(this, 500,
         this.x + 400, this.y + 100, 750);
     }, null, this);
+
+    if (Math.abs(this.body.velocity.x) > 2) {
+      var sign = this.body.velocity.x < 0 ? -1 : 1;
+      this.rotation += 0.1 * sign;
+    } else {
+      this.rotation = 0;
+    }
   };
 }());
