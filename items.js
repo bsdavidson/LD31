@@ -11,6 +11,7 @@
     this.gameState = gameState;
     this.hitSound = this.game.add.audio('ball_hit');
     this.lastLocation = LOCATION_GROUND;
+    this.flying = false;
 
     this.game.physics.arcade.enable(this);
     this.acceleration = 1000;
@@ -27,6 +28,12 @@
   LD.Baseball.prototype = Object.create(Phaser.Sprite.prototype);
   LD.Baseball.prototype.constructor = LD.Baseball;
 
+  LD.Baseball.prototype.onHitCat = function() {
+    if (Math.abs(this.body.velocity.x) > 50) {
+      this.hitSound.play();
+    }
+  };
+
   LD.Baseball.prototype.onHitPlatform = function() {
     if (this.lastLocation !== LOCATION_GROUND) {
       this.hitSound.play();
@@ -41,5 +48,13 @@
     if (this.y < 439) {
       this.lastLocation = LOCATION_AIR;
     }
+
+    // Baseball hit the fan.
+    var fanTop = this.gameState.level.fanTop;
+    this.game.physics.arcade.overlap(this, fanTop, function() {
+      this.hitSound.play();
+      this.game.physics.arcade.moveToXY(this, 500,
+        this.x + 400, this.y + 100, 750);
+    }, null, this);
   };
 }());

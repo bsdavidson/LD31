@@ -76,5 +76,33 @@
         this.angerTimer = null;
       }
     }
+
+    // The Bug hit the fan.
+    var fanTop = this.gameState.level.fanTop;
+    this.game.physics.arcade.overlap(this, fanTop, function() {
+      this.health -= 10;
+      this.game.physics.arcade.moveToXY(this, 500, this.x + 400, this.y + 100,
+        750);
+    }, null, this);
+
+    // We hit the bug with the ball.
+    this.game.physics.arcade.collide(this, this.gameState.baseball, function() {
+      this.gameState.baseball.hitSound.play();
+      this.health -= 10;
+    }, null, this);
+
+    // What happens when we get close enough to scare him
+    var baseball = this.gameState.baseball;
+    var distance = this.game.physics.arcade.distanceBetween(this, baseball);
+    if (distance < 90 && !this.flying) {
+      this.flySound.play();
+      this.angry = true;
+      this.angerTimer = this.game.time.now;
+      this.animations.play('fly');
+      this.flying = true;
+      this.body.gravity.y = -600;
+      this.body.gravity.x = 0;
+      this.game.physics.arcade.moveToXY(this, 500, this.x * 2, this.y * 2, 750);
+    }
   };
 }());

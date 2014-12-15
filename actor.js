@@ -54,15 +54,12 @@
     this.game.physics.arcade.collide(this, platforms);
 
     if (!this.gameState.player.controlDisabled) {
-      this.checkPlayer();
       this.checkBug();
     }
 
-    var fanTop = this.gameState.level.fanTop;
-    var player = this.gameState.player;
-    this.game.physics.arcade.collide(this, fanTop, function() {
-      this.gameState.baseball.hitSound.play();
-    }, null, this);
+    this.checkBaseball();
+    this.checkFan();
+    this.checkPlayer();
 
     if (this.body.touching.down) {
       this.flying = false;
@@ -75,6 +72,21 @@
     } else {
       this.fly();
     }
+  };
+
+  LD.Cat.prototype.checkBaseball = function() {
+    var baseball = this.gameState.baseball;
+    this.game.physics.arcade.collide(this, baseball, function() {
+      baseball.onHitCat(this);
+      this.hiss.play();
+    }, null, this);
+  };
+
+  LD.Cat.prototype.checkFan = function() {
+    var fanTop = this.gameState.level.fanTop;
+    this.game.physics.arcade.collide(this, fanTop, function() {
+      this.gameState.baseball.hitSound.play();
+    }, null, this);
   };
 
   LD.Cat.prototype.checkBug = function() {
@@ -93,7 +105,7 @@
 
     // If touching the bug and the bug is hurt enough, kill the bug.
     this.game.physics.arcade.overlap(this.gameState.bug, this, function() {
-      if (this.gameState.bug.health < CAT_KILL_HEALTH) {
+      if (this.gameState.bug.health <= CAT_KILL_HEALTH) {
         this.walkTimer = 0;
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
@@ -105,7 +117,7 @@
 
   LD.Cat.prototype.checkPlayer = function() {
     // Make the cat walk away if the player gets too close.
-    if (this.body.touching.down) {
+    if (this.body.touching.down && !this.flying) {
       var player = this.gameState.player;
       this.game.physics.arcade.overlap(this, player, function() {
         if (!this.walkTimer) {

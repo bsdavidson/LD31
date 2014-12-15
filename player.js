@@ -50,50 +50,16 @@
     this.game.physics.arcade.collide(this, this.platforms);
     this.game.physics.arcade.collide(this.bug, this.platforms);
 
-    this.game.physics.arcade.overlap(this, this.baseball, function() {
-      if (this.game.controls.pickup.isDown &&
-          this.game.controls.pickup.repeats === 1) {
-        this.collectItem(this.baseball);
-      }
-    }, null, this);
+    if (this.game.controls.pickup.isDown &&
+        this.game.controls.pickup.repeats === 1) {
+      var items = [this.baseball, this.cat];
+      this.game.physics.arcade.overlap(this, items, function(player, item) {
+        this.collectItem(item);
+      }, null, this);
+    }
 
-    this.game.physics.arcade.overlap(this, this.cat, function() {
-      if (this.game.controls.pickup.isDown &&
-          this.game.controls.pickup.repeats === 1) {
-        this.collectItem(this.cat);
-      }
-    }, null, this);
-
-    // Baseball hit the fan.
-    this.game.physics.arcade.overlap(this.baseball, this.fanTop, function() {
-      this.baseball.hitSound.play();
-      this.game.physics.arcade.moveToXY(this.baseball, 500,
-        this.x + 400, this.y + 100, 750);
-    }, null, this);
-
-    // The Bug hit the fan.
-    this.game.physics.arcade.overlap(this.bug, this.fanTop, function() {
-      this.bug.health -= 10;
-      this.game.physics.arcade.moveToXY(this.bug, 500, this.x + 400,
-        this.y + 100, 750);
-    }, null, this);
-
-    // We hit the bug with the ball.
-    this.game.physics.arcade.collide(this.baseball, this.bug, function() {
-      this.baseball.hitSound.play();
-      this.bug.health -= 10;
-    }, null, this);
-
-    //We hit the cat with the baseball.
-    this.game.physics.arcade.collide(this.baseball, this.cat, function() {
-      if (Math.abs(this.baseball.body.velocity.x) > 50) {
-        this.baseball.hitSound.play();
-        this.cat.hiss.play();
-      }
-    }, null, this);
-
-    this.game.physics.arcade.overlap(this.bug, this, function() {
-      if (!this.game.controls.down.isDown) {
+    if (!this.game.controls.down.isDown) {
+      this.game.physics.arcade.overlap(this, this.bug, function() {
         this.animations.play('eww');
         this.scream.play();
         this.controlDisabled = true;
@@ -102,24 +68,7 @@
         this.events.onAnimationComplete.add(function() {
           this.game.state.start('Gameover');
         }, this);
-      }
-    }, null, this);
-
-    // OH SNAP!
-
-    // What happens when we get close enough to scare him
-    var baseballDistance = this.game.physics.arcade.distanceBetween(
-      this.baseball, this.bug);
-    if (baseballDistance < 90 && !this.bug.flying) {
-      this.bug.flySound.play();
-      this.bug.angry = true;
-      this.bug.angerTimer = this.game.time.now;
-      this.bug.animations.play('fly');
-      this.bug.flying = true;
-      this.bug.body.gravity.y = -600;
-      this.bug.body.gravity.x = 0;
-      this.game.physics.arcade.moveToXY(
-        this.bug, 500, this.x * 2, this.y * 2, 750);
+      }, null, this);
     }
 
     if (this.baseball.body.velocity.x > 2) {
@@ -135,7 +84,6 @@
         // console.log('LEFT!');
         this.body.velocity.x = -150;
         this.animations.play('walk');
-
         this.scale.x = 1;
         this.scale.x = -1;
       } else if (this.game.controls.right.isDown) {
