@@ -8,10 +8,11 @@
 
     this.flySound = this.game.add.audio('fly_sound');
 
+    this.direction = 1;
     this.angry = false;
     this.angerTimer = null;
     this.flying = false;
-    this.healthText = this.game.make.text(1, 1, 'Bug : ' + this.health, {
+    this.healthText = this.game.make.text(5, 4, 'Bug : ', {
       font: '20px Arial',
       fill: '#ff0044',
       align: 'center'
@@ -21,7 +22,7 @@
     this.animations.add('fly', [2, 3], 20, true);
     this.animations.add('stop', [0], 10, true);
     this.animations.add('die', [4, 5, 6, 7], 10, false);
-    this.animations.play('walk');
+    this.animations.play('stop');
     this.game.physics.arcade.enable(this);
     this.anchor.setTo(0.5, 0.5);
     this.body.collideWorldBounds = true;
@@ -35,7 +36,7 @@
   LD.Bug.prototype.constructor = LD.Bug;
 
   LD.Bug.prototype.update = function() {
-    this.healthText.text = 'Bug : ' + this.health;
+    this.healthText.text = 'Bug :';
 
     // if (this.health < 50 && !this.flying) {
     //   this.angry = true;
@@ -61,12 +62,14 @@
       }, this);
     }
 
+    this.gameState.level.bugHealth.scale.x = 100 * (this.health / 100);
+
     if (this.body.touching.up && !this.angry) {
       // console.log('Im Calm');
       this.flying = false;
       this.body.velocity.y = 0;
-      this.body.velocity.x = 0;
-      this.animations.play('stop');
+      this.body.velocity.x = 20;
+      this.walk();
     }
 
     if (this.angerTimer) {
@@ -106,5 +109,18 @@
       this.body.gravity.x = 0;
       this.game.physics.arcade.moveToXY(this, 500, this.x * 2, this.y * 2, 750);
     }
+  };
+
+  LD.Bug.prototype.walk = function() {
+    if (this.x < 50) {
+      this.direction = 1;
+      this.scale.x = 1;
+    } else if (this.x > 750) {
+      this.direction = -1;
+      this.scale.x = -1;
+    }
+    // this.body.setSize(43, 35, -7, -5);
+    this.body.velocity.x = 20 * this.direction;
+    this.animations.play('walk');
   };
 }());

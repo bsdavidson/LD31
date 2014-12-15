@@ -21,8 +21,8 @@
     this.body.bounce.y = 0.0;
     this.body.gravity.y = 800;
 
-    this.powerBar = this.game.add.sprite(this.game.input.activePointer.x,
-      this.game.input.activePointer.y, 'health');
+   // this.powerBar = this.game.add.sprite(this.game.input.activePointer.x,
+     // this.game.input.activePointer.y, 'health');
 
     this.animations.add('walk', [0, 1, 2, 3, 4, 6], 10, true);
     this.animations.add('throw', [12, 13, 14], 6, false);
@@ -49,21 +49,9 @@
   LD.Player.prototype.update = function() {
     this.game.physics.arcade.collide(this, this.gameState.level.platforms);
 
-    this.powerBar.x = this.game.input.activePointer.x;
-    this.powerBar.y = this.game.input.activePointer.y;
-    this.powerBar.scale.x = 100 * (this.throwFactor / 100);
-
-    if (this.game.controls.pickup.isDown &&
-        this.game.controls.pickup.repeats === 1) {
-      var items = [
-        this.gameState.baseball,
-        this.gameState.cat,
-        this.gameState.waterGun
-      ];
-      this.game.physics.arcade.overlap(this, items, function(player, item) {
-        this.collectItem(item);
-      }, null, this);
-    }
+    //this.gameState.level.powerBar.x = this.game.input.activePointer.x;
+    //this.gameState.level.powerBar.y = this.game.input.activePointer.y;
+    this.gameState.level.powerBar.scale.x = 100 * (this.throwFactor / 100);
 
     if (!this.game.controls.down.isDown) {
       this.game.physics.arcade.overlap(this, this.gameState.bug, function() {
@@ -108,7 +96,7 @@
 
       if (this.game.input.activePointer.isDown && this.itemHolding) {
         if (this.throwFactor < 100 && this.lastIncrement >= 0) {
-          if (this.throwFactor < 75) {
+          if (this.throwFactor < 90) {
             this.throwFactor += 2;
             this.lastIncrement = 2;
           } else {
@@ -116,11 +104,11 @@
             this.lastIncrement = 0.5;
           }
         } else if (this.throwFactor > 0) {
-          this.throwFactor -= 1;
-          this.lastIncrement = -1;
+          this.throwFactor -= 2;
+          this.lastIncrement = -2;
         } else {
-          this.throwFactor += 1;
-          this.lastIncrement = 1;
+          this.throwFactor += 2;
+          this.lastIncrement = 2;
         }
         this.throwPower = 1000 * (this.throwFactor / 100);
       }
@@ -151,7 +139,7 @@
 
   LD.Player.prototype.collectItem = function(item) {
     if (this.itemHolding) {
-      this.itemHolding.reset(this.x + 50 , this.y - 80);
+      this.itemHolding.reset(this.x + 80 , this.y - 30);
       this.itemHolding = null;
     }
     this.itemHolding = item;

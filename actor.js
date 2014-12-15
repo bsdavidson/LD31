@@ -151,7 +151,7 @@
     if (this.x < 100) {
       this.direction = 1;
       this.scale.x = -1;
-    } else if (this.y > 650) {
+    } else if (this.x > 650) {
       this.direction = -1;
       this.scale.x = 1;
     }
