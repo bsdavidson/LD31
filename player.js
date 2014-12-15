@@ -73,7 +73,7 @@
         this.body.velocity.x = 0;
         this.body.velocity.y = 0;
         this.events.onAnimationComplete.add(function() {
-          this.game.state.start('Gameover');
+          this.game.state.start('GameOver');
         }, this);
       }, null, this);
     }
