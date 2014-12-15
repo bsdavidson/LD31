@@ -80,8 +80,8 @@
 
     this.game.physics.arcade.collide(this, baseball, function() {
       baseball.onHitCat(this);
-      if (Math.abs(baseball.body.velocity.x) > 20 ||
-          Math.abs(baseball.body.velocity.y) > 20) {
+      if (Math.abs(baseball.body.velocity.x) > 100 ||
+          Math.abs(baseball.body.velocity.y) > 100) {
         this.hiss.play();
       }
     }, null, this);
