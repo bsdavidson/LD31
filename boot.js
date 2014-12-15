@@ -3,9 +3,9 @@ LD = (function() {
 
   var LD = {};
 
-  LD.Boot = function() {};
+  LD.BootState = function() {};
 
-  LD.Boot.prototype = {
+  LD.BootState.prototype = {
     preload: function() {
       console.log('boot preload');
     },

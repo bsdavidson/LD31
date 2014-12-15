@@ -31,13 +31,13 @@
   'use strict';
 
   var game = new Phaser.Game(800, 480, Phaser.AUTO, 'game');
-  game.state.add('Boot', LD.Boot);
-  game.state.add('Preloader', LD.Preloader);
-  game.state.add('Menu', LD.Menu);
-  game.state.add('Game', LD.Game);
-  game.state.add('Gameover', LD.Gameover);
-  game.state.add('GameWon', LD.GameWon);
-  game.state.add('GameWonCat', LD.GameWonCat);
+  game.state.add('Boot', LD.BootState);
+  game.state.add('Preloader', LD.PreloaderState);
+  game.state.add('Menu', LD.MenuState);
+  game.state.add('Game', LD.GameState);
+  game.state.add('GameOver', LD.GameOverState);
+  game.state.add('GameWon', LD.GameWonState);
+  game.state.add('GameWonCat', LD.GameWonCatState);
   game.state.start('Boot');
 })();
 </script>

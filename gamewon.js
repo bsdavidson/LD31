@@ -1,16 +1,14 @@
 (function() {
   'use strict';
 
-  LD.GameWon = function(game) {
+  LD.GameWonState = function(game) {
     this.game = game;
   };
 
-  LD.GameWon.prototype = {
+  LD.GameWonState.prototype = {
     create: function() {
       var displayText = this.game.deathType;
       this.add.sprite(0, 0, 'gamewonscreen');
-      // display images
-      // add the button that will start the game
       this.game.input.onDown.add(this.startGame, this);
     },
 
@@ -19,11 +17,11 @@
     }
   };
 
-  LD.GameWonCat = function(game) {
+  LD.GameWonCatState = function(game) {
     this.game = game;
   };
 
-  LD.GameWonCat.prototype = {
+  LD.GameWonCatState.prototype = {
     create: function() {
       var displayText = this.game.deathType;
       this.add.sprite(0, 0, 'gamewonscreencat');

@@ -1,9 +1,11 @@
 (function() {
   'use strict';
 
-  LD.Gameover = function(game) {};
+  LD.GameOverState = function(game) {
+    this.game = game;
+  };
 
-  LD.Gameover.prototype = {
+  LD.GameOverState.prototype = {
     create: function() {
       this.add.sprite(0, 0, 'gameoverscreen');
       this.game.input.onDown.add(this.startGame, this);

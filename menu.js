@@ -1,9 +1,11 @@
 (function() {
   'use strict';
 
-  LD.Menu = function(game) {};
+  LD.MenuState = function(game) {
+    this.game = game;
+  };
 
-  LD.Menu.prototype = {
+  LD.MenuState.prototype = {
     create: function() {
       this.add.sprite(0, 0, 'titlescreen');
       this.game.input.onDown.add(this.startGame, this);

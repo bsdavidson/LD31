@@ -1,9 +1,11 @@
 (function() {
   'use strict';
 
-  LD.Game = function(game) {};
+  LD.GameState = function(game) {
+    this.game = game;
+  };
 
-  LD.Game.prototype = {
+  LD.GameState.prototype = {
     create: function() {
       this.level = new LD.Level(this);
       this.bug = new LD.Bug(this);
@@ -19,12 +21,12 @@
       this.game.world.add(this.player);
     },
 
-    update: function() {
-      this.level.update();
-    },
-
     render: function() {
       this.level.render();
+    },
+
+    update: function() {
+      this.level.update();
     }
   };
 }());

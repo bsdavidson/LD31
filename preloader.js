@@ -1,9 +1,11 @@
 (function() {
   'use strict';
 
-  LD.Preloader = function(game) {};
+  LD.PreloaderState = function(game) {
+    this.game = game;
+  };
 
-  LD.Preloader.prototype = {
+  LD.PreloaderState.prototype = {
     preload: function() {
       this.stage.backgroundColor = '#DDDDDD';
       // Load sprites
