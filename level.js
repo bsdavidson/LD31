@@ -48,7 +48,16 @@
     this.fanTop.body.immovable = true;
 
     this.bed = this.game.make.sprite(20, this.game.world.height - 130, 'bed');
+
     this.tv = this.game.make.sprite(330, this.game.world.height - 200, 'tv');
+    this.game.physics.arcade.enable(this.tv);
+    this.tv.body.immovable = true;
+    this.tv.animations.add('zelda', [1, 2, 3, 4], 10, true);
+    this.zelda = this.game.add.audio('zelda');
+    this.tv.frame = 0;
+    this.tv.inputEnabled = true;
+    this.tv.events.onInputDown.add(this.tvActivate, this);
+    this.tv.power = 'off';
 
     this.console = this.game.make.sprite(333, this.game.world.height - 110,
       'console');
@@ -73,7 +82,6 @@
 
   LD.Level.prototype.update = function(player) {
     this.updateShootingStar();
-    this.tv.frame = 1;
   };
 
   LD.Level.prototype.updateShootingStar = function() {
@@ -85,5 +93,18 @@
     this.starscape.events.onAnimationComplete.add(function() {
       this.starscape.animations.play('twinkle');
     }, this);
+  };
+
+  LD.Level.prototype.tvActivate = function() {
+    if (this.tv.power === 'off') {
+      this.tv.animations.play('zelda');
+      this.zelda.play();
+      this.tv.power = 'on';
+    } else {
+      this.tv.animations.stop();
+      this.tv.frame = 0;
+      this.tv.power = 'off';
+      this.zelda.stop();
+    }
   };
 }());

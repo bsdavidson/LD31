@@ -43,6 +43,7 @@
       this.load.audio('cat_meow', 'assets/cat_meow.ogg');
       this.load.audio('cat_attack', 'assets/cat_attack.ogg');
       this.load.audio('cat_hiss', 'assets/cat_hiss.ogg');
+      this.load.audio('zelda', 'assets/zelda.ogg');
     },
 
     create: function() {
