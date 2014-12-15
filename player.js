@@ -47,12 +47,6 @@
   LD.Player.prototype.constructor = LD.Player;
 
   LD.Player.prototype.update = function() {
-    this.bug = this.gameState.bug;
-    this.baseball = this.gameState.baseball;
-    this.fanTop = this.gameState.level.fanTop;
-    this.platforms = this.gameState.level.platforms;
-    this.cat = this.gameState.cat;
-
     this.game.physics.arcade.collide(this, this.gameState.level.platforms);
 
     this.powerBar.x = this.game.input.activePointer.x;
@@ -61,14 +55,18 @@
 
     if (this.game.controls.pickup.isDown &&
         this.game.controls.pickup.repeats === 1) {
-      var items = [this.baseball, this.cat];
+      var items = [
+        this.gameState.baseball,
+        this.gameState.cat,
+        this.gameState.waterGun
+      ];
       this.game.physics.arcade.overlap(this, items, function(player, item) {
         this.collectItem(item);
       }, null, this);
     }
 
     if (!this.game.controls.down.isDown) {
-      this.game.physics.arcade.overlap(this, this.bug, function() {
+      this.game.physics.arcade.overlap(this, this.gameState.bug, function() {
         this.animations.play('eww');
         this.scream.play();
         this.controlDisabled = true;

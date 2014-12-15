@@ -64,4 +64,30 @@
       this.rotation = 0;
     }
   };
+
+  LD.WaterGun = function(gameState) {
+    Phaser.Sprite.call(this, gameState.game, 500,
+      gameState.game.world.height - 50, 'water_gun');
+
+    this.flying = false;
+    this.gameState = gameState;
+
+    this.anchor.setTo(0.5, 0.5);
+
+    this.game.physics.arcade.enable(this);
+    this.body.collideWorldBounds = true;
+    this.body.bounce.x = 0.5;
+    this.body.bounce.y = 0.2;
+    this.body.gravity.y = 800;
+    this.body.drag.x = 100;
+    this.body.drag.y = 100;
+  };
+
+  LD.WaterGun.prototype = Object.create(Phaser.Sprite.prototype);
+  LD.WaterGun.prototype.constructor = LD.WaterGun;
+
+  LD.WaterGun.prototype.update = function() {
+    var platforms = this.gameState.level.platforms;
+    this.game.physics.arcade.collide(this, platforms);
+  };
 }());

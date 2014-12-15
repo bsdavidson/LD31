@@ -18,7 +18,7 @@
       this.load.image('ceiling', 'assets/ceiling_tile.png');
       this.load.image('fan_light', 'assets/fan_light.png');
       this.load.image('baseball', 'assets/baseball.png');
-      this.load.image('watergun', 'assets/water_gun.png');
+      this.load.image('water_gun', 'assets/water_gun.png');
       this.load.image('bed', 'assets/bed.png');
       this.load.image('console', 'assets/console.png');
       this.load.image('health', 'assets/health_bar.png');

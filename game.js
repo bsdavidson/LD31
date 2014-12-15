@@ -12,12 +12,14 @@
       this.player = new LD.Player(this);
       this.cat = new LD.Cat(this);
       this.baseball = new LD.Baseball(this);
+      this.waterGun = new LD.WaterGun(this);
 
       this.level.add();
       this.game.world.add(this.bug);
       this.game.world.add(this.bug.healthText);
       this.game.world.add(this.cat);
       this.game.world.add(this.baseball);
+      this.game.world.add(this.waterGun);
       this.game.world.add(this.player);
     },
 
