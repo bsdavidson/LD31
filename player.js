@@ -9,6 +9,9 @@
     this.startX = 100;
     this.startY = 100;
     this.itemHolding = null;
+    this.throwFactor = 0;
+    this.throwPower = 0;
+    this.lastIncrement = 0;
 
     this.scream = this.game.add.audio('scream');
     this.game.physics.arcade.enable(this);
@@ -17,6 +20,9 @@
     this.body.collideWorldBounds = true;
     this.body.bounce.y = 0.0;
     this.body.gravity.y = 800;
+
+    this.powerBar = this.game.add.sprite(this.game.input.activePointer.x,
+      this.game.input.activePointer.y, 'health');
 
     this.animations.add('walk', [0, 1, 2, 3, 4, 6], 10, true);
     this.animations.add('throw', [12, 13, 14], 6, false);
@@ -48,6 +54,10 @@
     this.cat = this.gameState.cat;
 
     this.game.physics.arcade.collide(this, this.gameState.level.platforms);
+
+    this.powerBar.x = this.game.input.activePointer.x;
+    this.powerBar.y = this.game.input.activePointer.y;
+    this.powerBar.scale.x = 100 * (this.throwFactor / 100);
 
     if (this.game.controls.pickup.isDown &&
         this.game.controls.pickup.repeats === 1) {
@@ -98,12 +108,35 @@
         this.frame = 0;
       }
 
-      if (this.game.input.activePointer.isDown) {
-        this.fire();
+      if (this.game.input.activePointer.isDown && this.itemHolding) {
+        if (this.throwFactor < 100 && this.lastIncrement >= 0) {
+          if (this.throwFactor < 75) {
+            this.throwFactor += 2;
+            this.lastIncrement = 2;
+          } else {
+            this.throwFactor += 0.5;
+            this.lastIncrement = 0.5;
+          }
+        } else if (this.throwFactor > 0) {
+          this.throwFactor -= 1;
+          this.lastIncrement = -1;
+        } else {
+          this.throwFactor += 1;
+          this.lastIncrement = 1;
+        }
+        this.throwPower = 1000 * (this.throwFactor / 100);
+      }
+
+      if (this.game.input.activePointer.isUp && this.itemHolding &&
+          this.throwFactor > 0) {
+        this.fire(this.throwPower);
+        this.throwFactor = 0;
+        this.throwPower = 0;
+        this.lastIncrement = 0;
       }
 
       if (this.game.controls.drop.isDown &&
-          this.game.controls.adrop.repeats === 1) {
+          this.game.controls.drop.repeats === 1) {
         if (this.itemHolding) {
           this.itemHolding.reset(this.x + 100, this.y - 80);
           this.itemHolding = null;
@@ -122,14 +155,20 @@
     this.itemHolding.flying = true;
   };
 
-  LD.Player.prototype.fire = function() {
-    // console.log(this.itemHolding);
+  LD.Player.prototype.fire = function(power) {
     if (this.itemHolding) {
-      this.itemHolding.reset(this.x, this.y - 80);
+      this.itemHolding.reset(this.x, this.y - 50);
+      if (this.itemHolding.body) {
+        this.itemHolding.body.touching.left = false;
+        this.itemHolding.body.touching.right = false;
+        this.itemHolding.body.touching.up = false;
+        this.itemHolding.body.touching.down = false;
+      }
       this.animations.play('throw');
+      this.itemHolding.flying = true;
       this.itemHolding.rotation = this.game.physics.arcade.moveToPointer(
-        this.itemHolding, this.itemHolding.acceleration,
-        this.game.input.activePointer, 500);
+        this.itemHolding, power,
+        this.game.input.activePointer);
       if (this.itemHolding.throwSound) {
         this.itemHolding.throwSound.play();
       }

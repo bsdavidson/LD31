@@ -19,6 +19,7 @@
       this.load.image('watergun', 'assets/water_gun.png');
       this.load.image('bed', 'assets/bed.png');
       this.load.image('console', 'assets/console.png');
+      this.load.image('health', 'assets/health_bar.png');
 
       // Sprite Sheets
       this.load.spritesheet('fan_top', 'assets/fan_top.png', 192, 102);
