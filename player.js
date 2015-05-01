@@ -24,7 +24,7 @@
    // this.powerBar = this.game.add.sprite(this.game.input.activePointer.x,
      // this.game.input.activePointer.y, 'health');
 
-    this.animations.add('walk', [0, 1, 2, 3, 4, 6], 10, true);
+    this.animations.add('walk', [0, 1, 2, 3, 4, 5], 10, true);
     this.animations.add('throw', [12, 13, 14], 6, false);
     this.animations.add('pickup', [10, 11], 4, false);
     this.animations.add('eww',

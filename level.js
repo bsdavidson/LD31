@@ -52,6 +52,7 @@
     this.fanLight.animations.add('break', FAN_BREAK, 10, false);
     this.fanLight.body.setSize(40, 23, 40, 0);
     this.fanLight.status = 'good'; // good or broken
+    this.fanLight.frame = 0;
 
     this.bed = this.game.make.sprite(20, this.game.world.height - 130, 'bed');
 

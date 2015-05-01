@@ -88,7 +88,7 @@
   var WATER_GUN_OFFSET_Y = -45;
   var WATER_OFFSET = 8;
   var WATER_OFFSET_ANGLE = -0.6;
-  var WATER_SPEED = 100;
+  var WATER_SPEED = 500;
   var WATER_WIGGLE = 0.1;
 
   LD.WaterGun = function(gameState) {
@@ -158,7 +158,7 @@
     this.frame = this.flipped ? 1 : 0;
 
     var pointer = this.game.input.activePointer;
-    var pointerAngle = Phaser.Point.angle(pointer, this);
+    var pointerAngle = this.game.physics.arcade.angleToPointer(this, pointer);
     this.emitterAngle = pointerAngle;
     this.rotation = pointerAngle;
     if (this.flipped) {
